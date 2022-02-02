@@ -1,0 +1,37 @@
+{
+    "name": "moCloud",
+    "displayName": "小麦魔方",
+    "version": "2.0.0",
+    "uuid": "969e7e60-a1ea-499b-b1f4-6a2d10f39edd",
+    "description": "小麦魔方API实现的项目，支持在线看视频、添加标签、多账号切换、储存策略切换。",
+    "icon": "assets/icon.png",
+    "prefs": "assets/prefs.json",
+    "main": "main.js",
+    "license": "UNLICENSED",
+    "author": {
+        "name": "kdlong",
+        "fullName": "",
+        "email": ""
+    },
+    "engineStrick": true,
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "updates": "",
+    "contributes": {
+        "search": "search"
+    },
+    "homepage": "",
+    "engines": {
+        "dora": ">=2.0.0"
+    },
+    "keywords": [
+        "Dora.js"
+    ],
+    "dependencies": {
+        "axios": "^0.25.0"
+    },
+    "categories": [],
+    "donates": {}
+}

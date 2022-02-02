@@ -1,0 +1,34 @@
+{
+    "name": "KDbili",
+    "displayName": "哔哩哔哩",
+    "version": "1.0.0",
+    "uuid": "e2fd5e5d-edbd-475d-b77b-dd0409f425aa",
+    "description": "没有描述",
+    "icon": "assets/bilibili.png",
+    "prefs": "assets/prefs.json",
+    "main": "main.js",
+    "license": "UNLICENSED",
+    "author": {
+        "name": "kdlong"
+    },
+    "engineStrick": true,
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "updates": "",
+    "contributes": {
+        "search": null
+    },
+    "homepage": "",
+    "engines": {
+        "dora": ">=2.0.0"
+    },
+    "keywords": [
+        "Dora.js"
+    ],
+    "dependencies": {
+        "axios": "^0.25.0",
+        "qs": "^6.10.3"
+    }
+}

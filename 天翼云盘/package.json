@@ -1,0 +1,34 @@
+{
+    "name": "TYYP",
+    "displayName": "天翼云盘",
+    "version": "1.0.0",
+    "uuid": "bc3f0312-e6f6-4134-9abc-09851d25ae3e",
+    "description": "天翼云盘功能实现，支持在线观看视频。",
+    "icon": "assets/logo.png",
+    "prefs": "assets/prefs.json",
+    "main": "main.js",
+    "license": "UNLICENSED",
+    "author": {
+        "name": "kdlong"
+    },
+    "engineStrick": true,
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "updates": "",
+    "contributes": {
+        "search": "list_search"
+    },
+    "homepage": "",
+    "engines": {
+        "dora": ">=2.0.0"
+    },
+    "keywords": [
+        "Dora.js"
+    ],
+    "dependencies": {
+        "axios": "^0.25.0",
+        "qs": "^6.10.3"
+    }
+}

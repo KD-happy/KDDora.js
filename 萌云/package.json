@@ -1,0 +1,37 @@
+{
+    "name": "mYun",
+    "displayName": "萌云",
+    "version": "1.0.0",
+    "uuid": "bc70b0ba-0d9f-416b-a1d6-2f8f48299939",
+    "description": "基于萌云API的实现",
+    "icon": "assets/icon.png",
+    "prefs": "assets/prefs.json",
+    "main": "main.js",
+    "license": "UNLICENSED",
+    "author": {
+        "name": "kdlong",
+        "fullName": "",
+        "email": ""
+    },
+    "engineStrick": true,
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "updates": "",
+    "contributes": {
+        "search": "search"
+    },
+    "homepage": "",
+    "engines": {
+        "dora": ">=2.0.0"
+    },
+    "keywords": [
+        "Dora.js"
+    ],
+    "dependencies": {
+        "axios": "^0.25.0"
+    },
+    "categories": [],
+    "donates": {}
+}
