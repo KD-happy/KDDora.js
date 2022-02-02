@@ -102,7 +102,8 @@ module.exports = {
                 value: ""
             })
             if (shareCode != null) {
-                var fileName = await getShareInfo(/\/?([a-zA-Z0-9]{12})/g.exec(shareCode)[1]);
+                shareCode = /\/?([a-zA-Z0-9]{12})/g.exec(shareCode)[1];
+                var fileName = await getShareInfo(shareCode);
                 if (fileName != false) {
                     this.title = fileName;
                     if (shareMode == 1) {
@@ -222,7 +223,7 @@ module.exports = {
             file.forEach(f => {
                 folder.push(f);
             })
-            if ((page-1)*60+count == list.fileListAO.count) {
+            if ((page-1)*60+count == list.fileListAO.count || isFolder==false) {
                 return {
                     items: folder
                 }
