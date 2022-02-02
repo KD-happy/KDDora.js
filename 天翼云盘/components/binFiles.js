@@ -13,7 +13,7 @@ async function empty_recycle() { // 清空回收站
         okBtn: "清空"
     })
     if (pd) {
-        var res = await createBatchTask("EMPTY_RECYCLE", JSON.stringify([]), "",cookie);
+        var res = await createBatchTask("EMPTY_RECYCLE", JSON.stringify([]), "", "", cookie);
         if (res != false) {
             var taskId = res.taskId;
             do {
@@ -48,7 +48,7 @@ async function delete_file(m) { // 删除文件
             fileId: m.id,
             fileName: m.name,
             isFolder: 0
-        }]), "", cookie);
+        }]), "", "", cookie);
         data = await checkBatchTask("CLEAR_RECYCLE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("删除成功！");
@@ -65,7 +65,7 @@ async function restore(m) { // 还原文件
         fileId: m.id,
         fileName: m.name,
         isFolder: 0
-    }]), "", cookie);
+    }]), "", "", cookie);
     data = await checkBatchTask("RESTORE", data.taskId, cookie);
     if (data != false) {
         $ui.toast("还原成功！");
@@ -75,7 +75,7 @@ async function restore(m) { // 还原文件
 }
 
 async function Restore() { // 还原30文件
-    var data = await createBatchTask("RESTORE", JSON.stringify(taskInfos), "", cookie);
+    var data = await createBatchTask("RESTORE", JSON.stringify(taskInfos), "", "", cookie);
     if (data != false) {
         var taskId = data.taskId;
         do {

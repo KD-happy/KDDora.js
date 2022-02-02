@@ -87,7 +87,7 @@ async function delete_folder(m) { // 删除文件夹
             fileId: m.id,
             fileName: m.name,
             isFolder: 1
-        }]), "", cookie);
+        }]), "", "", cookie);
         data = await checkBatchTask("DELETE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("删除成功！");
@@ -110,7 +110,7 @@ async function delete_file(m) { // 删除文件
             fileId: m.id,
             fileName: m.name,
             isFolder: 0
-        }]), "", cookie);
+        }]), "", "", cookie);
         data = await checkBatchTask("DELETE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("删除成功！");
@@ -147,7 +147,7 @@ async function copy_to(m) { // 复制到
         okBtn: "复制"
     })
     if (pd) {
-        var data = await createBatchTask("COPY", JSON.stringify(taskInfos), parentId, cookie);
+        var data = await createBatchTask("COPY", JSON.stringify(taskInfos), parentId, "", cookie);
         data = await checkBatchTask("COPY", data.taskId, cookie);
         if (data != false) {
             $ui.toast("复制成功！");
@@ -167,7 +167,7 @@ async function move_to(m) { // 移动到
         okBtn: "移动"
     })
     if (pd) {
-        var data = await createBatchTask("MOVE", JSON.stringify(taskInfos), parentId, cookie);
+        var data = await createBatchTask("MOVE", JSON.stringify(taskInfos), parentId, "", cookie);
         data = await checkBatchTask("MOVE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("移动成功！");
@@ -216,6 +216,7 @@ module.exports = {
     type: 'list',
     title: '天翼云盘',
     searchRoute: $route('list_search'),
+    actions: [{title: "分享保存", route: $route("saveList")}],
     async fetch({args, page}) {
         this.title = args.title;
         getCookie();

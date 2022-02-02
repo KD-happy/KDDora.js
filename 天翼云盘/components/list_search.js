@@ -75,7 +75,7 @@ async function delete_file(m) { // 删除文件
             fileId: m.id,
             fileName: m.name,
             isFolder: 0
-        }]), "", cookie);
+        }]), "", "", cookie);
         data = await checkBatchTask("DELETE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("删除成功！");

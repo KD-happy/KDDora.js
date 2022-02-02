@@ -2,6 +2,7 @@ module.exports = {
     type: 'bottomTab',
     title: "天翼云盘",
     searchRoute: $route('list_search'),
+    actions: [{title: "分享保存", route: $route("saveList")}],
     async fetch() {
         return [
             {
