@@ -4,7 +4,7 @@ const getShareInfoByCodeV2 = require("./API/getShareInfoByCodeV2");
 const createBatchTask = require("./API/createBatchTask");
 const checkBatchTask = require("./API/checkBatchTask");
 
-var shareCode, fileId, isFolder, shareId="", shareMode, accessCode;
+var shareCode, fileId, fileName, isFolder, shareId="", shareMode, accessCode;
 
 var sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -19,6 +19,7 @@ async function getShareInfo(shareCode) { // 获取分享链接信息
         fileId = info.fileId;
         isFolder = info.isFolder;
         shareMode = info.shareMode;
+        fileName = info.fileName;
         if (shareMode != 1) { // 不需要密码
             shareId = info.shareId;
         }
@@ -95,7 +96,7 @@ module.exports = {
         getCookie();
         getOrderBy();
         page = page || 1;
-        if (args.fileId == undefined || args.fileId == null) {
+        if (page == 1 && args.fileId == undefined) {
             shareCode = await $input.text({
                 title: "请输入分享Code",
                 hint: "shareCode",
@@ -123,6 +124,21 @@ module.exports = {
                     } else {
                         var list = await listShareDir(page, fileId, fileId, isFolder, shareId, shareMode, orderBy, descending, accessCode, cookie);
                     }
+                    if (isFolder) {
+                        this.actions = [{
+                            title: '保存全部',
+                            onClick: async () => {
+                                folder_save({id: fileId, name: fileName})
+                            }
+                        }]
+                    } else {
+                        this.actions = [{
+                            title: '保存全部',
+                            onClick: async () => {
+                                file_save({id: fileId, name: fileName})
+                            }
+                        }]
+                    }
                 } else {
                     $ui.toast("分享Code已失效");
                 }
@@ -132,18 +148,23 @@ module.exports = {
                 return;
             }
         } else {
-            shareId = args.shareId;
-            var list = await listShareDir(page, args.fileId, args.fileId, args.isFolder, args.shareId, args.shareMode, orderBy, descending, args.accessCode, cookie);
+            if (args.fileId == undefined) { // 单个文件夹
+                var list = await listShareDir(page, fileId, fileId, isFolder, shareId, shareMode, orderBy, descending, accessCode, cookie);
+            } else { // 点击文件夹后
+                this.title = args.title;
+                var list = await listShareDir(page, args.fileId, args.fileId, args.isFolder, shareId, args.shareMode, orderBy, descending, args.accessCode, cookie);    
+            }
         }
         if (list != false) {
             var file=[], folder=[], count=0;
-            if (args.fileId == undefined || args.fileId == null) {
+            if (page == 1 && args.fileId == undefined) {
                 list.fileListAO.folderList.forEach(m => {
                     count += 1;
                     folder.push({
                         title: m.name,
                         route: $route("saveList", {
                             fileId: m.id,
+                            title: m.name,
                             isFolder: isFolder,
                             shareId: shareId,
                             shareMode: shareMode,
@@ -170,8 +191,9 @@ module.exports = {
                         title: m.name,
                         route: $route("saveList", {
                             fileId: m.id,
+                            title: m.name,
                             isFolder: args.isFolder,
-                            shareId: args.shareId,
+                            shareId: shareId,
                             shareMode: args.shareMode,
                             accessCode: args.accessCode
                         }),
@@ -223,15 +245,17 @@ module.exports = {
             file.forEach(f => {
                 folder.push(f);
             })
-            if ((page-1)*60+count == list.fileListAO.count || isFolder==false) {
-                return {
-                    items: folder
+            if (isFolder) {
+                if ((page-1)*60+count == list.fileListAO.count) {
+                    return folder;
+                } else {
+                    return {
+                        nextPage: page+1,
+                        items: folder
+                    }
                 }
             } else {
-                return {
-                    nextPage: page+1,
-                    items: folder
-                }
+                return folder;
             }
         } else {
             $ui.toast("密码错误");

@@ -310,9 +310,7 @@ module.exports = {
                 dir.push(f);
             })
             if ((page-1)*60+count == list.fileListAO.count) {
-                return {
-                    items: dir
-                }
+                return dir;
             } else {
                 return {
                     nextPage: page+1,
