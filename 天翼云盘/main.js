@@ -36,6 +36,12 @@ module.exports = {
     sson: "",
     taskInfos: "", // 复制用的
     parentId: -11,
+    async getOrderBy() {
+        $storage.get("orderBy")!=null ? this.orderBy=$storage.get("orderBy") : $storage.put("orderBy", this.orderBy);
+        $storage.get("descending")!=null ? this.descending=$storage.get("descending") : $storage.put("descending", this.descending);
+    },
+    orderBy: "filename",
+    descending: false,
     formateTimeStamp(time) {
         var date = new Date();
         date.setTime(time);

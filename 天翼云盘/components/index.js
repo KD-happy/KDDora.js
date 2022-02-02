@@ -7,7 +7,7 @@ module.exports = {
             {
                 title: '全部文件',
                 image: $assets("home.svg"),
-                route: $route('list', {id: -11, title: "全部文件"})
+                route: $route('list', {id: -11, pid: -11, title: "全部文件"})
             },
             {
                 title: '用户配置',

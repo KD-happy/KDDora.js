@@ -237,18 +237,46 @@ module.exports = {
         data.push({title: "其他操作",style: 'category'})
         data.push({
             title: "回收站",
-            spanCount: 4,
+            spanCount: 3,
             route: $route("binFiles")
         })
         data.push({
             title: "登录日志",
-            spanCount: 4,
+            spanCount: 3,
             route: $route("loginLog")
         })
         data.push({
             title: "文件分享",
-            spanCount: 4,
+            spanCount: 3,
             route: $route("list_share")
+        })
+        data.push({
+            title: "文件排序",
+            spanCount: 3,
+            onClick: async () => {
+                getOrderBy();
+                var order_title = "文件名 - AZ";
+                var options = [], type = [
+                    {title: '文件名 - AZ', orderBy: 'filename', descending: false},
+                    {title: '文件名 - ZA', orderBy: 'filename', descending: true},
+                    {title: '文件大小 - 小大', orderBy: 'filesize', descending: false},
+                    {title: '文件大小 - 大小', orderBy: 'filesize', descending: true},
+                    {title: '修改时间 - 晚早', orderBy: 'lastOpTime', descending: false},
+                    {title: '修改时间 - 早晚', orderBy: 'lastOpTime', descending: true},
+                ];
+                type.forEach(f => {
+                    if (f.orderBy!=orderBy || f.descending!=descending) {
+                        options.push(f);
+                    } else {
+                        order_title = f.title;
+                    }
+                })
+                var selected = await $input.select({
+                    title: `当前排序: ${order_title}`,
+                    options: options
+                })
+                selected!=null ? ($storage.put("orderBy", selected.orderBy) & $storage.put("descending", selected.descending) & $ui.toast("设置成功")) : $ui.toast("取消设置");
+            }
         })
         data.push({title: "用户列表操作",style: 'category'})
         data.push({

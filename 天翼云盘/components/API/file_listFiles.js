@@ -6,10 +6,12 @@ module.exports = file_listFiles;
  * 获取文件id中文件和文件夹相关信息
  * @param {Number} pageNum 请求页数
  * @param {String} folderId 文件Id
+ * @param {String} orderBy 排序
+ * @param {Boolean} descending 降序
  * @param {String} cookie 请求Cookie
  * @returns {Object}
  */
-async function file_listFiles(pageNum, folderId, cookie) {
+async function file_listFiles(pageNum, folderId, orderBy, descending, cookie) {
     var url = "https://cloud.189.cn/api/open/file/listFiles.action";
     var headers = {
         'accept': 'application/json;charset=UTF-8', // 非常重要
@@ -22,8 +24,8 @@ async function file_listFiles(pageNum, folderId, cookie) {
         pageSize: 60,
         pageNum: pageNum,
         folderId: folderId,
-        orderBy: "lastOpTime",
-        descending: true
+        orderBy: orderBy,
+        descending: descending
     }
     try {
         var res = await axios.get(url, {

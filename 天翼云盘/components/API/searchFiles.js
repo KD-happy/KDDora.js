@@ -7,10 +7,12 @@ module.exports = searchFiles;
  * @param {String} folderId 搜索目录 文件夹id
  * @param {String} filename 搜索文件名
  * @param {Number} pageNum 页数
+ * @param {String} orderBy 排序
+ * @param {Boolean} descending 降序
  * @param {String} cookie 请求Cookie
  * @returns {Object}
  */
-async function searchFiles(folderId, filename, pageNum, cookie) {
+async function searchFiles(folderId, filename, pageNum, orderBy, descending, cookie) {
     var url = "https://cloud.189.cn/api/open/file/searchFiles.action";
     var params = {
         'folderId': folderId,
@@ -19,8 +21,8 @@ async function searchFiles(folderId, filename, pageNum, cookie) {
         'filename': filename,
         'recursive': 1,
         'iconOption': 5,
-        'orderBy': 'lastOpTime', // 排序
-        'descending': 'true'
+        'orderBy': orderBy, // 排序
+        'descending': descending
     }
     var headers = {
         'accept': 'application/json;charset=UTF-8',

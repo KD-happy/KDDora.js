@@ -95,9 +95,10 @@ module.exports = {
     type: 'list',
     async fetch({args, page}) {
         getCookie();
+        getOrderBy();
         page = page || 1;
         this.title = `搜索 “${args.keyword}” 如下:`;
-        var list = await searchFiles(parentId, args.keyword, page, cookie);
+        var list = await searchFiles(parentId, args.keyword, page, orderBy, descending, cookie);
         if (list != false) {
             var data = list.fileList.map(m => {
                 return {

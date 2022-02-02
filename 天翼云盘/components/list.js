@@ -219,9 +219,10 @@ module.exports = {
     async fetch({args, page}) {
         this.title = args.title;
         getCookie();
+        getOrderBy();
         parentId =  args.id;
         page = page || 1;
-        var list = await file_listFiles(page, args.id, cookie);
+        var list = await file_listFiles(page, args.id, orderBy, descending, cookie);
         if (list != false) {
             var count = 0, file = [], dir = [];
             list.fileListAO.folderList.forEach(m => {
@@ -230,6 +231,7 @@ module.exports = {
                     title: m.name,
                     route: $route('list', {
                         id: m.id,
+                        pid: args.id,
                         title: m.name
                     }),
                     onLongClick: async () => {
@@ -319,5 +321,8 @@ module.exports = {
         } else {
             $ui.toast("Cookie失效 可添加SSON刷新Cookie");
         }
+    },
+    async beforeDestroy() {
+        parentId = this.args.pid;
     }
 }
