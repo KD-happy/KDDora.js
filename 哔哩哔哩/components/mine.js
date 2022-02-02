@@ -43,7 +43,7 @@ function changLogin(mid) {
     $storage.put("userlist", userlist);
 }
 
-async function deleteLogin(m) {
+async function deleteLogin(m) { // 删除用户
     let pd = await $input.confirm({
         title: "确认框",
         message: `是否删除用户: ${m.name}\n用户MID: ${m.mid}`,
@@ -63,12 +63,40 @@ async function deleteLogin(m) {
     }
 }
 
-async function showConfig(m) {
+async function showConfig(m) { // 显示配置
     $ui.showCode(JSON.stringify(m, null, ' '));
 }
 
-async function attribute(m) {
+async function attribute(m) { // 属性
     $ui.showCode(`用户MID: ${m.mid}\n用户名: ${m.name}\nCookie: ${m.cookie}`);
+}
+
+async function sorting(m) { // 切换排序
+    var userlist = $storage.get("userlist");
+    var new_userlist = [], new_index=[], sort, sort_index;
+    userlist.forEach((f, i) => {
+        if (f.mid != m.mid)  {
+            new_userlist.push(f);
+            new_index.push({
+                title: `切换到第 ${i+1}`,
+                value: i
+            });
+        } else {
+            sort = f;
+            sort_index = i;
+        }
+    })
+    var selected = await $input.select({
+        title: `当前排序为第 ${sort_index+1}`,
+        options: new_index
+    })
+    if (selected != null) {
+        new_userlist.splice(selected.value, 0, sort);
+        $storage.put("userlist", new_userlist);
+        $ui.toast("切换成功");
+    } else {
+        $ui.toast("取消切换");
+    }
 }
 
 module.exports = {
@@ -210,6 +238,7 @@ module.exports = {
                         title: '选择哪一个',
                         options: [
                             {title: '删除用户', fun: deleteLogin},
+                            {title: '切换排序', fun: sorting},
                             {title: '显示配置', fun: showConfig},
                             {title: '属性', fun: attribute},
                         ]
