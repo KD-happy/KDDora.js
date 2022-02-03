@@ -97,22 +97,30 @@ module.exports = {
         getOrderBy();
         page = page || 1;
         if (page == 1 && args.fileId == undefined) {
-            shareCode = await $input.text({
-                title: "请输入分享Code",
-                hint: "shareCode",
-                value: ""
-            })
+            if (args.shareCode == undefined) {
+                shareCode = await $input.text({
+                    title: "请输入分享Code",
+                    hint: "shareCode",
+                    value: ""
+                })
+            } else {
+                shareCode = /\/?([a-zA-Z0-9]{12})/g.exec(args.shareCode)[1];
+            }
             if (shareCode != null) {
                 shareCode = /\/?([a-zA-Z0-9]{12})/g.exec(shareCode)[1];
                 var fileName = await getShareInfo(shareCode);
                 if (fileName != false) {
                     this.title = fileName;
                     if (shareMode == 1) {
-                        accessCode = await $input.text({
-                            title: "请输入密码",
-                            hint: "密码",
-                            value: ""
-                        })
+                        if (args.accessCode == undefined) {
+                            accessCode = await $input.text({
+                                title: "请输入密码",
+                                hint: "密码",
+                                value: ""
+                            })
+                        } else {
+                            accessCode = args.accessCode;
+                        }
                         if (accessCode != null) {
                             await checkAccess(shareCode, accessCode)
                         } else {
