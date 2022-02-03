@@ -216,7 +216,6 @@ module.exports = {
     type: 'list',
     title: '天翼云盘',
     searchRoute: $route('list_search'),
-    actions: [{title: "分享保存", route: $route("saveList")}],
     async fetch({args, page}) {
         this.title = args.title;
         getCookie();
@@ -309,7 +308,32 @@ module.exports = {
             file.forEach(f => {
                 dir.push(f);
             })
+            this.actions = [{title: "分享保存", route: $route("saveList")}];
             if ((page-1)*60+count == list.fileListAO.count) {
+                if (page == 1 && count == 0) {
+                    let actions = this.actions;
+                    if (taskInfos != "") {
+                        actions.splice(0, 0, {
+                            title: "复制到",
+                            onClick: () => {
+                                copy_to();
+                            }
+                        })
+                        actions.splice(1, 0, {
+                            title: "移动到",
+                            onClick: () => {
+                                move_to();
+                            }
+                        })
+                    }
+                    actions.splice(0, 0, {
+                        title: "新建文件夹",
+                        onClick: () => {
+                            create_folder();
+                        }
+                    })
+                    this.actions = actions;
+                }
                 return dir;
             } else {
                 return {
