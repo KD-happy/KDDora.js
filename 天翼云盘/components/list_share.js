@@ -46,41 +46,83 @@ module.exports = {
                 if (m.isFolder) {
                     if (m.needAccessCode != null) {
                         var fileName = `私密* ${m.fileName}`;
+                        return {
+                            title: fileName,
+                            route: $route("saveList", {
+                                shareCode: m.shortShareUrl,
+                                accessCode: m.accessCode
+                            }),
+                            onLongClick: async () => {
+                                var selected = await $input.select({
+                                    title: '选择哪一个',
+                                    options: [
+                                        {title: '取消分享链接', fun: shareDelete},
+                                        {title: '复制链接和密码', fun: copySourceUrl},
+                                        {title: '属性', fun: attribute},
+                                    ]
+                                })
+                                selected != null ? selected.fun(m) : null;
+                            }
+                        }
                     } else {
                         var fileName = `公开* ${m.fileName}`;
-                    }
-                    return {
-                        title: fileName,
-                        onClick: async () => {
-                            var selected = await $input.select({
-                                title: '选择哪一个',
-                                options: [
-                                    {title: '取消分享链接', fun: shareDelete},
-                                    {title: '复制链接和密码', fun: copySourceUrl},
-                                    {title: '属性', fun: attribute},
-                                ]
-                            })
-                            selected != null ? selected.fun(m) : null;
+                        return {
+                            title: fileName,
+                            route: $route("saveList", {
+                                shareCode: m.shortShareUrl
+                            }),
+                            onLongClick: async () => {
+                                var selected = await $input.select({
+                                    title: '选择哪一个',
+                                    options: [
+                                        {title: '取消分享链接', fun: shareDelete},
+                                        {title: '复制链接和密码', fun: copySourceUrl},
+                                        {title: '属性', fun: attribute},
+                                    ]
+                                })
+                                selected != null ? selected.fun(m) : null;
+                            }
                         }
                     }
                 } else {
                     if (m.needAccessCode != null) {
                         var fileName = `私密 ${m.fileName}`;
+                        return {
+                            title: fileName,
+                            route: $route("saveList", {
+                                shareCode: m.shortShareUrl,
+                                accessCode: m.accessCode
+                            }),
+                            onLongClick: async () => {
+                                var selected = await $input.select({
+                                    title: '选择哪一个',
+                                    options: [
+                                        {title: '取消分享链接', fun: shareDelete},
+                                        {title: '复制链接和密码', fun: copySourceUrl},
+                                        {title: '属性', fun: attribute},
+                                    ]
+                                })
+                                selected != null ? selected.fun(m) : null;
+                            }
+                        }
                     } else {
                         var fileName = `公开 ${m.fileName}`;
-                    }
-                    return {
-                        title: fileName,
-                        onClick: async () => {
-                            var selected = await $input.select({
-                                title: '选择哪一个',
-                                options: [
-                                    {title: '取消分享链接', fun: shareDelete},
-                                    {title: '复制链接和密码', fun: copySourceUrl},
-                                    {title: '属性', fun: attribute},
-                                ]
-                            })
-                            selected != null ? selected.fun(m) : null;
+                        return {
+                            title: fileName,
+                            route: $route("saveList", {
+                                shareCode: m.shortShareUrl
+                            }),
+                            onLongClick: async () => {
+                                var selected = await $input.select({
+                                    title: '选择哪一个',
+                                    options: [
+                                        {title: '取消分享链接', fun: shareDelete},
+                                        {title: '复制链接和密码', fun: copySourceUrl},
+                                        {title: '属性', fun: attribute},
+                                    ]
+                                })
+                                selected != null ? selected.fun(m) : null;
+                            }
                         }
                     }
                 }
