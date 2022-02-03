@@ -85,6 +85,45 @@ async function sorting(m) {
     }
 }
 
+async function changeIP() {
+    var userlist = $storage.get("userlist");
+    var new_userlist = [], go = false;
+    var pd = await $input.confirm({
+        title: "确认框",
+        message: "是否刷新当前用户的IP",
+        okBtn: "刷新"
+    })
+    if (pd){
+        for (var i=0; i<userlist.length; i++) {
+            if (userlist[i].is_login) {
+                let user = await getUserBriefInfo(userlist[i].cookie);
+                let LOGIN_USER = await loginUrl(userlist[i].sson);
+                if (user != false) {
+                    go = true;
+                    new_userlist.push({
+                        userAccount: user.userAccount,
+                        nickname: user.nickname,
+                        icon: user.icon,
+                        cookie: LOGIN_USER != "" ? "COOKIE_LOGIN_USER="+LOGIN_USER : userlist[i].cookie,
+                        sson: userlist[i].sson != "" ? userlist[i].sson : "",
+                        is_login: userlist[i].is_login
+                    })
+                }
+            } else {
+                new_userlist.push(userlist[i]);
+            }
+        }
+        if (go) {
+            $storage.put("userlist", new_userlist);
+            $ui.toast("刷新成功");
+        } else {
+            $ui.toast("刷新失败");
+        }
+    } else {
+        $ui.toast("取消刷新");
+    }
+}
+
 module.exports = {
     type: 'list',
     title: '用户配置',
@@ -98,7 +137,10 @@ module.exports = {
                 data.push({
                     title: `用户名: ${info.nickname}`,
                     summary: `用户账号: ${info.userAccount}`,
-                    thumb: info.icon
+                    thumb: info.icon,
+                    onClick: () => {
+                        changeIP();
+                    }
                 })
                 info = await getUserInfoForPortal(cookie);
                 if (info != false) {
