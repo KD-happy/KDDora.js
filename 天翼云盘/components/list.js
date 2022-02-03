@@ -147,6 +147,7 @@ async function copy_to(m) { // 复制到
         okBtn: "复制"
     })
     if (pd) {
+        taskInfos = "";
         var data = await createBatchTask("COPY", JSON.stringify(taskInfos), parentId, "", cookie);
         data = await checkBatchTask("COPY", data.taskId, cookie);
         if (data != false) {
@@ -157,7 +158,6 @@ async function copy_to(m) { // 复制到
     } else {
         $ui.toast("取消复制");
     }
-    taskInfos = "";
 }
 
 async function move_to(m) { // 移动到
@@ -167,6 +167,7 @@ async function move_to(m) { // 移动到
         okBtn: "移动"
     })
     if (pd) {
+        taskInfos = "";
         var data = await createBatchTask("MOVE", JSON.stringify(taskInfos), parentId, "", cookie);
         data = await checkBatchTask("MOVE", data.taskId, cookie);
         if (data != false) {
@@ -177,7 +178,6 @@ async function move_to(m) { // 移动到
     } else {
         $ui.toast("取消移动");
     }
-    taskInfos = "";
 }
 
 async function create_folder(m) { // 新建文件夹

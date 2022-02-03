@@ -159,6 +159,7 @@ async function copy_to(m) { // 复制
         okBtn: "复制"
     })
     if (pd) {
+        src_dir = "";
         if (await copy(m.path, mid, src_dir, isFile, cookie)) {
             $ui.toast("复制成功");
         } else {
@@ -167,7 +168,6 @@ async function copy_to(m) { // 复制
     } else {
         $ui.toast("取消复制");
     }
-    src_dir = "";
 }
 
 async function move_to(m) { // 移动到
@@ -177,6 +177,7 @@ async function move_to(m) { // 移动到
         okBtn: "移动"
     })
     if (pd) {
+        src_dir = "";
         if (await object_patch("move", m.path, mid, src_dir, isFile, cookie)) {
             $ui.toast("移动成功");
         } else {
@@ -185,7 +186,6 @@ async function move_to(m) { // 移动到
     } else {
         $ui.toast("取消移动");
     }
-    src_dir = "";
 }
 
 module.exports = {
