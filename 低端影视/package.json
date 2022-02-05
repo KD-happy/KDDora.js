@@ -1,0 +1,34 @@
+{
+    "name": "ddrk",
+    "displayName": "低端影视",
+    "version": "1.1.0",
+    "uuid": "4d31b952-cbcd-4b9d-9061-980b4e54abf6",
+    "description": "支持搜索和刷新搜索列表, 在线观看视频",
+    "icon": "assets/icon.png",
+    "prefs": "assets/prefs.json",
+    "main": "main.js",
+    "license": "UNLICENSED",
+    "author": {
+        "name": "kdlong"
+    },
+    "engineStrick": true,
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "updates": "",
+    "contributes": {
+        "search": "search"
+    },
+    "homepage": "",
+    "engines": {
+        "dora": ">=2.0.0"
+    },
+    "keywords": [
+        "Dora.js"
+    ],
+    "dependencies": {
+        "axios": "^0.24.0",
+        "cheerio": "^1.0.0-rc.10"
+    }
+}
