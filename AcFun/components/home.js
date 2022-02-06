@@ -5,7 +5,7 @@ module.exports = {
         var data = [];
         data.push({
             style: 'category',
-            title: '添加分类',
+            title: '添加分类 (单点打开、长按删除)',
             action: {
                 title: "添加",
                 onClick: async () => {
@@ -42,7 +42,30 @@ module.exports = {
                     spanCount: 6,
                     route: $route("tags_list", {
                         tag: f.tag
-                    })
+                    }),
+                    onLongClick: async () => {
+                        let pd = await $input.confirm({
+                            title: "确认框",
+                            message: `是否删除该标签: ${f.tag_name}`,
+                            okBtn: "删除"
+                        })
+                        if (pd) {
+                            let tags = $storage.get("tags");
+                            let new_tags = [];
+                            tags.forEach(m => {
+                                if (f.tag != m.tag && f.tag_name != m.tag_name) {
+                                    new_tags.push({
+                                        tag_name: m.tag_name,
+                                        tag: m.tag
+                                    })
+                                }
+                            })
+                            $storage.put('tags', new_tags);
+                            $ui.toast("删除成功");
+                        } else {
+                            $ui.toast("取消删除");
+                        }
+                    }
                 })
             })
         }

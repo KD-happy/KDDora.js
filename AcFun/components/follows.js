@@ -5,7 +5,7 @@ module.exports = {
         var data = [];
         data.push({
             style: 'category',
-            title: '添加关注',
+            title: '添加关注 (单点打开、长按删除)',
             action: {
                 title: "添加",
                 onClick: async () => {
@@ -42,7 +42,30 @@ module.exports = {
                     spanCount: 6,
                     route: $route("up_list", {
                         up: f.follow
-                    })
+                    }),
+                    onLongClick: async () => {
+                        let pd = await $input.confirm({
+                            title: "确认框",
+                            message: `是否删除该标签: ${f.follow_name}`,
+                            okBtn: "删除"
+                        })
+                        if (pd) {
+                            let follows = $storage.get("follows");
+                            let new_follows = [];
+                            follows.forEach(m => {
+                                if (f.follow != m.follow && f.follow_name != m.follow_name) {
+                                    new_follows.push({
+                                        follow_name: m.follow_name,
+                                        follow: m.follow
+                                    })
+                                }
+                            })
+                            $storage.put('follows', new_follows);
+                            $ui.toast("删除成功");
+                        } else {
+                            $ui.toast("取消删除");
+                        }
+                    }
                 })
             })
         }
