@@ -1,22 +1,16 @@
-const video_info_by_ac = require("./video_info_by_ac")
-
 module.exports = {
-    type: 'list',
+    type: 'bottomTab',
     async fetch() {
         return [
             {
-                style: 'simple',
-                title: '宅舞',
-                route: $route("tags_list", {
-                    tag: 'list134'
-                })
+                title: '首页',
+                image: $assets('首页.svg'),
+                route: $route('home')
             },
             {
-                style: 'simple',
-                title: '咬人猫',
-                route: $route("up_list", {
-                    up: '413684'
-                })
+                title: '关注',
+                image: $assets('我的关注.svg'),
+                route: $route('follows')
             }
         ]
     }
