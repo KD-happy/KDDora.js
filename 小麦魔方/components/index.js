@@ -6,7 +6,7 @@ const share_save = require("./API/share_save");
 var items = [
     {
         title: '全部',
-        route: $route('list', {path: '', title: '小麦魔方'})
+        route: $route('list', {path: '', ppath: '', title: '小麦魔方'})
     },
     {
         title: '视频',
@@ -55,8 +55,7 @@ module.exports = {
                     key = key.split("/");
                     key = key[key.length - 1];
                     key = key.split("?")[0];
-                    console.log(key);
-                    if (await share_save(key, '/', cookie)) {
+                    if (await share_save(key, path=="" ? "/" : path, cookie)) {
                         $ui.toast("保存成功");
                     } else {
                         $ui.toast("保存错误");
@@ -68,7 +67,6 @@ module.exports = {
         }
     ],
     beforeCreate() {
-        // cookie = `cloudreve-session=${$prefs.get("moCookie")}`;
         getCookie();
     },
     async fetch() {

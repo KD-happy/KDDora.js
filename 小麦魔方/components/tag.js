@@ -84,7 +84,6 @@ async function file_delete(m) { // 删除文件
 module.exports = {
     type: 'list',
     beforeCreate() {
-        // cookie = `cloudreve-session=${$prefs.get("moCookie")}`;
         getCookie();
     },
     async fetch({args}) {

@@ -1,7 +1,7 @@
 {
     "name": "moCloud",
     "displayName": "小麦魔方",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "uuid": "969e7e60-a1ea-499b-b1f4-6a2d10f39edd",
     "description": "小麦魔方API实现的项目，支持在线看视频、添加标签、多账号切换、储存策略切换。",
     "icon": "assets/icon.png",

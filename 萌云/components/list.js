@@ -80,7 +80,7 @@ async function file_rename(m) { // 重新命名文件
 }
 
 async function dir_create(m) { // 创建文件夹
-    var path = m.path[m.path.length-1]=="/" ? m.path.substring(0, m.path.length-1) : "";
+    // var path = m.path[m.path.length-1]=="/" ? m.path.substring(0, m.path.length-1) : "";
     var dir_name = await $input.text({
         title: '创建文件夹',
         hint: '文件夹名',
@@ -175,8 +175,7 @@ async function copy_to(m) { // 复制
         okBtn: "复制"
     })
     if (pd) {
-        src_dir = "";
-        if (await copy(m.path, mid, src_dir, isFile, cookie)) {
+        if (await copy(path=="" ? "/" : path, mid, src_dir, isFile, cookie)) {
             $ui.toast("复制成功");
         } else {
             $ui.toast("复制失败");
@@ -184,6 +183,7 @@ async function copy_to(m) { // 复制
     } else {
         $ui.toast("取消复制");
     }
+    src_dir = "";
 }
 
 async function move_to(m) { // 移动到
@@ -193,8 +193,7 @@ async function move_to(m) { // 移动到
         okBtn: "移动"
     })
     if (pd) {
-        src_dir = "";
-        if (await object_patch("move", m.path, mid, src_dir, isFile, cookie)) {
+        if (await object_patch("move", path=="" ? "/" : path, mid, src_dir, isFile, cookie)) {
             $ui.toast("移动成功");
         } else {
             $ui.toast("移动失败");
@@ -202,6 +201,7 @@ async function move_to(m) { // 移动到
     } else {
         $ui.toast("取消移动");
     }
+    src_dir = "";
 }
 
 module.exports = {
@@ -211,6 +211,7 @@ module.exports = {
     },
     async fetch({args}) {
         this.title = args.title;
+        path = args.path;
         var list = await directory(args.path, cookie);
         if (list == false && typeof(list) == "boolean") {
             $router.to($route('login'));
@@ -224,6 +225,7 @@ module.exports = {
                         title: m.name,
                         route: $route("list", {
                             path: m.path + '/' + m.name,
+                            ppath: m.path,
                             title: m.name
                         }),
                         onLongClick: async () => {
@@ -296,7 +298,35 @@ module.exports = {
             file.forEach(f => {
                 dir.push(f);
             })
+            this.actions = [{title: '搜索分享', route: $route("share_search")}];
+            if (list.length == 0) {
+                let actions = this.actions==undefined ? [] : this.actions;
+                actions.push({
+                    title: '创建文件夹',
+                    onClick: () => {
+                        dir_create();
+                    }
+                })
+                if (src_dir != "") {
+                    actions.push({
+                        title: '复制到',
+                        onClick: () => {
+                            copy_to();
+                        }
+                    })
+                    actions.push({
+                        title: '移动到',
+                        onClick: () => {
+                            move_to();
+                        }
+                    })
+                }
+                this.actions = actions;
+            }
             return dir;
         }  
+    },
+    async beforeDestroy() {
+        path = this.args.ppath;
     }
 }

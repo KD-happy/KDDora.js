@@ -37,12 +37,10 @@ async function copy(dst, id, src_dir, is_file, cookie) {
             src_dir: src_dir
         }
     }
-    console.log(data);
     try {
         var res = await axios.post(url, data, {
             headers: headers
         })
-        console.log(res.data);
     } catch {
         console.log("请求失败！");
         return false;

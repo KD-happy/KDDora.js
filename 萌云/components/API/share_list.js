@@ -16,7 +16,6 @@ async function share_list(key, path, cookie) {
         'referer': 'https://moecloud.cn/',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
     }
-    console.log(url);
     try {
         var res = await axios.get(url, {
             headers: headers

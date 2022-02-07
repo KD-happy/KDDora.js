@@ -41,7 +41,7 @@ async function copySourceUrl(m) { // 复制分享链接和密码
 }
 
 async function save_to(m) {
-    if(await share_save(m.key, '/', cookie)) {
+    if(await share_save(m.key, path=="" ? "/" : path, cookie)) {
         $ui.toast("保存成功！");
     } else {
         $ui.toast("保存失败！");
