@@ -1,5 +1,6 @@
 const copy = require("./API/copy");
-const directory = require("./API/directory")
+const directory = require("./API/directory");
+const directory_PUT = require("./API/directory_PUT");
 const download = require("./API/download");
 const object_delete = require("./API/object_delete");
 const object_patch = require("./API/object_patch");
@@ -75,6 +76,21 @@ async function file_rename(m) { // 重新命名文件
         $ui.toast("重新命名成功！");
     } else {
         $ui.toast("重新命名失败！");
+    }
+}
+
+async function dir_create(m) { // 创建文件夹
+    var path = m.path[m.path.length-1]=="/" ? m.path.substring(0, m.path.length-1) : "";
+    var dir_name = await $input.text({
+        title: '创建文件夹',
+        hint: '文件夹名',
+        value: ''
+    })
+    var data = await directory_PUT(`${path}/${dir_name}`, cookie);
+    if (data) {
+        $ui.toast("创建成功！");
+    } else {
+        $ui.toast("创建失败！");
     }
 }
 
@@ -196,7 +212,7 @@ module.exports = {
     async fetch({args}) {
         this.title = args.title;
         var list = await directory(args.path, cookie);
-        if (list == false) {
+        if (list == false && typeof(list) == "boolean") {
             $router.to($route('login'));
             $ui.toast("Cookie已失效，请登录！");
         } else {
@@ -212,6 +228,7 @@ module.exports = {
                         }),
                         onLongClick: async () => {
                             var options = [];
+                            options.push({title: '创建文件夹', fun: dir_create});
                             options.push({title: '重新命名', fun: dir_rename});
                             src_dir=="" ? options.push({title: '复制移动', fun: copy_move_folder}) : null;
                             src_dir!="" ? options.push({title: '复制到', fun: copy_to}) : null;
@@ -235,7 +252,7 @@ module.exports = {
                 })
             }
             var file = [];
-            list.map(m => {
+            list.forEach(m => {
                 if (m.type == "file") {
                     file.push({
                         title: m.name,
@@ -252,6 +269,7 @@ module.exports = {
                         },
                         onLongClick: async () => {
                             var options = [];
+                            options.push({title: '创建文件夹', fun: dir_create});
                             options.push({title: '文件下载', fun: file_down});
                             options.push({title: '重新命名', fun: file_rename});
                             src_dir=="" ? options.push({title: "复制移动", fun: copy_move_file}) : null;
