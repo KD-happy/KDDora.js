@@ -9,6 +9,13 @@ console.info('Congratulation, your addon runs successfully!')
 module.exports = {
     async getCookie() {
         var userlist = $storage.get("userlist");
+        var order = $storage.get("order");
+        if (order == null) {
+            $storage.put("order", "mtime");
+            this.order = "mtime";
+        } else {
+            this.order = order;
+        }
         var go = true, cookie = "", mid = 0;
         if (userlist == null) {
             userlist = [];
@@ -34,6 +41,7 @@ module.exports = {
     },
     cookie: "",
     mid: 0,
+    order: '',
     formateTimeStamp(time) {
         var date = new Date();
         date.setTime(time);

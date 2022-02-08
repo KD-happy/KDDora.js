@@ -2,10 +2,9 @@ const resource_list = require("../API/resource_list");
 
 module.exports = {
     type: 'list',
-    // title: '哔哩哔哩 - 收藏',
     async fetch({args, page}) {
         page = page || 1;
-        var list = await resource_list(page, args.id, cookie);
+        var list = await resource_list(page, args.id, order, cookie);
         var data = list.medias.map(m => {
             return {
                 style: 'live',

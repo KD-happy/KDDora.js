@@ -3,7 +3,35 @@ const folder_created_list_all = require("../API/folder_created_list_all");
 module.exports = {
     type: 'topTab',
     title: '哔哩哔哩 - 收藏夹',
+    beforeCreate() {
+        getCookie();
+    },
     async fetch({page}) {
+        this.actions = [
+            {
+                title: '切换排序',
+                onClick: async () => {
+                    order = $storage.get('order');
+                    var options = [], order_title, type = [
+                        {title: '最近收藏', order: 'mtime'},
+                        {title: '最多播放', order: 'view'},
+                        {title: '最新投稿', order: 'pubtime'}
+                    ];
+                    type.forEach(f => {
+                        if (f.order == order) {
+                            order_title = f.title;
+                        } else {
+                            options.push(f);
+                        }
+                    })
+                    var selected = await $input.select({
+                        title: `当前排序: ${order_title}`,
+                        options: options
+                    })
+                    selected!=null ? ($storage.put("order", selected.order) & $ui.toast("设置成功")) : $ui.toast("取消设置");
+                }
+            }
+        ]
         page = page || 1;
         var list = await folder_created_list_all(mid, cookie);
         if (list != false) {
@@ -17,8 +45,5 @@ module.exports = {
             })
             return data;
         }
-    },
-    beforeCreate() {
-        getCookie();
     }
 }
