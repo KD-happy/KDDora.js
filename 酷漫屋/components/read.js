@@ -33,9 +33,12 @@ async function get_images(url) {
         data.push({
             title: '上一章',
             style: 'label',
-            route: $route('read', {
-                url: prev
-            })
+            onClick: () => {
+                set_url(prev);
+                $router.to($route('read', {
+                    url: prev
+                }))
+            }
         })
         data.push({
             title: '目录',
@@ -47,14 +50,18 @@ async function get_images(url) {
         data.push({
             title: '下一章',
             style: 'label',
-            route: $route('read', {
-                url: next
-            })
+            onClick: () => {
+                set_url(next);
+                $router.to($route('read', {
+                    url: next
+                }))
+            }
         })
         actions = [];
         actions.push({
             title: '下一章',
             onClick: () => {
+                set_url(next);
                 $router.to($route('read', {
                     url: next
                 }))
@@ -71,6 +78,7 @@ async function get_images(url) {
         actions.push({
             title: '上一章',
             onClick: () => {
+                set_url(prev);
                 $router.to($route('read', {
                     url: prev
                 }))

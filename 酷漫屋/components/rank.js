@@ -26,7 +26,13 @@ async function get_mh_item(url) {
                     okBtn: '收藏'
                 })
                 if (pd) {
-
+                    var follows = $storage.get('follows');
+                    if (follows == null) {
+                        follows = [];
+                    }
+                    follows.push(await get_info(all_url + $('a', mh_item.eq(i)).attr('href')));
+                    $storage.put('follows', follows);
+                    $ui.toast("收藏成功");
                 } else {
                     $ui.toast("取消收藏");
                 }

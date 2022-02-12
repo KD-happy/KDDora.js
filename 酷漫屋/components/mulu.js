@@ -6,10 +6,8 @@ var title;
 async function detail_more(url) {
     var data = [];
     var res = await axios.get(url);
-    console.log(url);
     var $ = cheerio.load(res.data);
     var more_url = all_url + $('.detail-more').attr('href');
-    console.log(more_url)
     res = await axios.get(more_url);
     $ = cheerio.load(res.data);
     title = $('title').text();

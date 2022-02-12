@@ -27,7 +27,13 @@ async function get_home() {
                     okBtn: '收藏'
                 })
                 if (pd) {
-
+                    var follows = $storage.get('follows');
+                    if (follows == null) {
+                        follows = [];
+                    }
+                    follows.push(await get_info(all_url + $('a', jxmh.eq(i)).attr('href')));
+                    $storage.put('follows', follows);
+                    $ui.toast("收藏成功");
                 } else {
                     $ui.toast("取消收藏");
                 }
@@ -38,8 +44,7 @@ async function get_home() {
         style: 'category',
         title: '今日热门'
     })
-    var jrrm = $('.swiper-container li')
-    console.log(jrrm.length)
+    var jrrm = $('.swiper-container li');
     for (let i=0; i<jrrm.length; i++) {
         data.push({
             style: 'vod',
@@ -57,7 +62,13 @@ async function get_home() {
                     okBtn: '收藏'
                 })
                 if (pd) {
-
+                    var follows = $storage.get('follows');
+                    if (follows == null) {
+                        follows = [];
+                    }
+                    follows.push(await get_info(all_url + $('a', jxmh.eq(i)).attr('href')));
+                    $storage.put('follows', follows);
+                    $ui.toast("收藏成功");
                 } else {
                     $ui.toast("取消收藏");
                 }
@@ -86,7 +97,13 @@ async function get_home() {
                     okBtn: '收藏'
                 })
                 if (pd) {
-
+                    var follows = $storage.get('follows');
+                    if (follows == null) {
+                        follows = [];
+                    }
+                    follows.push(await get_info(all_url + $('a', jxmh.eq(i)).attr('href')));
+                    $storage.put('follows', follows);
+                    $ui.toast("收藏成功");
                 } else {
                     $ui.toast("取消收藏");
                 }
@@ -115,7 +132,13 @@ async function get_home() {
                     okBtn: '收藏'
                 })
                 if (pd) {
-
+                    var follows = $storage.get('follows');
+                    if (follows == null) {
+                        follows = [];
+                    }
+                    follows.push(await get_info(all_url + $('a', jxmh.eq(i)).attr('href')));
+                    $storage.put('follows', follows);
+                    $ui.toast("收藏成功");
                 } else {
                     $ui.toast("取消收藏");
                 }
@@ -144,7 +167,13 @@ async function get_home() {
                     okBtn: '收藏'
                 })
                 if (pd) {
-
+                    var follows = $storage.get('follows');
+                    if (follows == null) {
+                        follows = [];
+                    }
+                    follows.push(await get_info(all_url + $('a', jxmh.eq(i)).attr('href')));
+                    $storage.put('follows', follows);
+                    $ui.toast("收藏成功");
                 } else {
                     $ui.toast("取消收藏");
                 }
