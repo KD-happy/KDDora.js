@@ -10,7 +10,7 @@ module.exports = ranking;
  * @returns {Object}
  */
 async function ranking(rid, type, cookie) {
-    var url = "https://api.bilibili.com/x/web-interface/ranking/v2?rid=168&type=all";
+    var url = "https://api.bilibili.com/x/web-interface/ranking/v2";
     var headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
         'cookie': cookie
