@@ -48,9 +48,7 @@ module.exports = {
             if (cards != false) {
                 var data = getBeautiful(cards);
                 if (data.length < 20) {
-                    return {
-                        items: data
-                    }
+                    return data;
                 } else {
                     return {
                         nextPage: page + 1,

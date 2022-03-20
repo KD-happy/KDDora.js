@@ -1,7 +1,7 @@
 {
     "name": "ddrk",
     "displayName": "低端影视",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "uuid": "4d31b952-cbcd-4b9d-9061-980b4e54abf6",
     "description": "支持搜索和刷新搜索列表, 在线观看视频",
     "icon": "assets/icon.png",

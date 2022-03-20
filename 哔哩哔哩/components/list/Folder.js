@@ -40,9 +40,7 @@ module.exports = {
                 items: data
             }
         } else {
-            return {
-                items: data
-            }
+            return data;
         }
     },
     beforeCreate() {
