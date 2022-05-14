@@ -6,7 +6,7 @@ const share_save = require("./API/share_save");
 var items = [
     {
         title: '全部',
-        route: $route('list', {path: '', ppath: '', title: '小麦魔方'})
+        route: $route('list', {path: '', ppath: '', title: '萌云'})
     },
     {
         title: '视频',
@@ -29,14 +29,14 @@ var items = [
         route: $route('shareList')
     },
     {
-        title: '小麦魔方配置',
+        title: '萌云配置',
         route: $route('login')
     }
 ];
 
 module.exports = {
     type: 'drawer',
-    title: '小麦魔方',
+    title: '萌云',
     searchRoute: $route('search'),
     actions: [
         {
