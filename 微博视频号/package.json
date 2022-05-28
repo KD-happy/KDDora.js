@@ -1,0 +1,34 @@
+{
+  "name": "wbsph",
+  "displayName": "微博视频号",
+  "version": "1.0.0",
+  "uuid": "cc3503c1-702b-4cf7-9e0b-be1bf1f200bf",
+  "description": "没有描述",
+  "icon": "assets/新浪微博.svg",
+  "prefs": "assets/prefs.json",
+  "main": "main.js",
+  "license": "UNLICENSED",
+  "author": {
+    "name": "kdlong"
+  },
+  "engineStrick": true,
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "updates": "",
+  "contributes": {
+    "search": null
+  },
+  "homepage": "",
+  "engines": {
+    "dora": ">=2.0.0"
+  },
+  "keywords": [
+    "Dora.js"
+  ],
+  "dependencies": {
+    "axios": "^0.24.0",
+    "qs": "^6.10.3"
+  }
+}
