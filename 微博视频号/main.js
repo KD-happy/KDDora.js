@@ -23,9 +23,11 @@ module.exports = {
         this.UID = $storage.get("UID") == undefined ? [] && $storage.put("UID", []) : $storage.get("UID")
         this.tab_code = $storage.get("tab_code") == undefined ? 0 && $storage.put("tab_code", 0) : $storage.get("tab_code")
         this.top = $storage.get("top") == undefined ? false && $storage.put("top", false) : $storage.get("top")
+        this.style = $storage.get("style") == undefined ? 0 && $storage.put("style", 0) : $storage.get("style")
     },
     cookie: "",
     UID: [],
     tab_code: 0,
-    top: false
+    top: false,
+    style: 0
 }

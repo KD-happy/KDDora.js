@@ -9,12 +9,40 @@ module.exports = {
         api = API(cookie)
     },
     async fetch() {
-        var data = []
-        data.push({title: "左边全部视频，右边分类视频",style: 'category'})
+        var data = [], style = $storage.get('style')
+        if (style == 0) {
+            data.push({
+                style: 'category',
+                title: '全部视频，分类视频，点赞过的视频',
+                action: {
+                    title: '切换样式',
+                    onClick: () => {
+                        $storage.put('style', 1)
+                        $ui.toast("切换成功")
+                    }
+                }
+            })
+        }
         UID.forEach(f => {
+            json = {
+                style: 'category',
+                title: f.name
+            }
+            if (data.length == 0) {
+                json.action = {
+                    title: '切换样式',
+                    onClick: () => {
+                        $storage.put('style', 0)
+                        $ui.toast("切换成功")
+                    }
+                }
+            }
+            if (style != 0) {
+                data.push(json)
+            }
             data.push({
                 style: 'icon',
-                title: f.name,
+                title: style == 0 ? f.name : "全部视频",
                 summary: "全部视频",
                 thumb: f.avatar,
                 spanCount: 4,
@@ -22,9 +50,10 @@ module.exports = {
                     $router.to($route('list/alllist', f))
                 }
             })
+            
             data.push({
                 style: 'icon',
-                title: f.name,
+                title: style == 0 ? f.name : "分类视频",
                 summary: "分类视频",
                 thumb: f.avatar,
                 spanCount: 4,
@@ -38,7 +67,7 @@ module.exports = {
             })
             data.push({
                 style: 'icon',
-                title: f.name,
+                title: style == 0 ? f.name : "点赞过的视频",
                 summary: "点赞过的视频",
                 thumb: f.avatar,
                 spanCount: 4,

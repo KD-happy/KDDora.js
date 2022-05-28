@@ -6,10 +6,10 @@ module.exports = {
     title: '微博视频号',
     actions: [
         {
-            title: "改变样式",
+            title: "切换样式",
             onClick: async () => {
                 let pd = await $input.confirm({
-                    title: "改变样式",
+                    title: "切换样式",
                     message: "当前样式显示在顶部，修改后是list点击",
                     okBtn: '确定'
                 })
