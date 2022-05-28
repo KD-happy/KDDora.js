@@ -82,6 +82,22 @@ module.exports = (cookie) => {
             })
         },
         /**
+         * 获取点赞过的视频
+         * @param {String} uid 用户UID
+         * @param {String} cursor 下一页
+         * @returns {Promise}
+         */
+        getLikeList: async (uid, cursor=0) => {
+            let url = 'https://weibo.com/ajax/profile/getLikeList'
+            return axios.get(url, {
+                headers: headers,
+                params: {
+                    uid: uid,
+                    cursor: cursor
+                }
+            })
+        },
+        /**
          * 通过UID获取用户信息
          * @param {String} uid 用户UID
          * @returns {Pomise}

@@ -15,9 +15,9 @@ module.exports = {
             data.push({
                 style: 'icon',
                 title: f.name,
-                summary: "单点全部，长按分类",
+                summary: "全部视频",
                 thumb: f.avatar,
-                spanCount: 6,
+                spanCount: 4,
                 onClick: () => {
                     $router.to($route('list/alllist', f))
                 }
@@ -25,15 +25,25 @@ module.exports = {
             data.push({
                 style: 'icon',
                 title: f.name,
-                summary: "单点全部，长按分类",
+                summary: "分类视频",
                 thumb: f.avatar,
-                spanCount: 6,
+                spanCount: 4,
                 onClick: () => {
                     if (top) {
                         $router.to($route('list/taglistTop', f))
                     } else {
                         $router.to($route('list/taglist', f))
                     }
+                }
+            })
+            data.push({
+                style: 'icon',
+                title: f.name,
+                summary: "点赞过的视频",
+                thumb: f.avatar,
+                spanCount: 4,
+                onClick: () => {
+                    $router.to($route('list/likelist', f))
                 }
             })
         })
