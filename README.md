@@ -5,6 +5,7 @@
 - [酷漫屋](./酷漫屋/README.md)
 - [萌云](./萌云/README.md)
 - [天翼云盘](./天翼云盘/README.md)
+- [微博视频号](./微博视频号/README.md)
 - [小麦魔方（官方停运了~~）](./小麦魔方/README.md)
 - [AcFun](./AcFun/README.md)
 
