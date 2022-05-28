@@ -2,6 +2,7 @@ const nav = require("./API/nav");
 const calendar_event = require("./API/calendar_event");
 const exp_reward = require("./API/exp_reward");
 const vip_privilege = require("./API/vip_privilege");
+const nav_stat = require("./API/nav_stat");
 
 function formatUtcTime(v) { // 时间格式化
     if (!v) {
@@ -106,6 +107,7 @@ module.exports = {
         getCookie();
         var userlist = $storage.get("userlist");
         var info = await nav(cookie);
+        var info1 = await nav_stat(cookie);
         var info2 = await calendar_event(cookie);
         var info3 = await exp_reward(cookie);
         var info4 = await vip_privilege(cookie);
@@ -118,7 +120,7 @@ module.exports = {
                 style: 'article',
                 title: "用户详细信息",
                 time: `${formatUtcTime(new Date().getTime())}`,
-                summary: `${vip}入站时间: ${formatUtcTime(info2.profile.jointime*1000)}\n当前等级: ${info.level_info.current_level}  等级经验: ${info.level_info.current_exp}/${info.level_info.next_exp}\n关注数: ${info2.following}  粉丝数: ${info2.follower}   节操值: ${info.moral}`
+                summary: `${vip}入站时间: ${formatUtcTime(info2.profile.jointime*1000)}\n当前等级: ${info.level_info.current_level}  等级经验: ${info.level_info.current_exp}/${info.level_info.next_exp}\n关注数: ${info1.following}  粉丝数: ${info1.follower}   节操值: ${info.moral}`
             });
             data.push({
                 style: 'article',
