@@ -118,7 +118,7 @@ module.exports = {
             style: 'article',
             title: "设置展示",
             time: `${formateTimeStamp(new Date().getTime())}`,
-            summary: `视频展示：${$storage.get("top") ? "顶部显示" : "list显示"}     视频排序：${$storage.get("tab_code") == 0 ? "默认排序" : "热门排序"}\n首页样式：${$storage.get('style') == 0 ? "总体版": "名称版"}      当前用户列表数：${$storage.get("UID").length}人\n注意：顶部显示后视频排序就设置不了了，切换成list才能显示。视频排序只对分类视频有效。`
+            summary: `视频展示：${$storage.get("top") ? "顶部显示" : "list显示"}     视频排序：${$storage.get("tab_code") == 0 ? "默认排序" : "热门排序"}\n首页样式：${$storage.get('style') ? "总体版": "名称版"}      当前用户列表数：${$storage.get("UID").length}人\n注意：顶部显示后视频排序就设置不了了，切换成list才能显示。视频排序只对分类视频有效。`
         });
         data.push({title: "Cookie操作",style: 'category'})
         data.push({
@@ -224,6 +224,9 @@ module.exports = {
                         ]
                     })
                     selected != null ? selected.fun(f) : null;
+                },
+                onClick: async () => {
+                    $router.to($route('list/onelist', f))
                 }
             })
         })

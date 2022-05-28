@@ -10,14 +10,14 @@ module.exports = {
     },
     async fetch() {
         var data = [], style = $storage.get('style')
-        if (style == 0) {
+        if (style) {
             data.push({
                 style: 'category',
                 title: '全部视频，分类视频，点赞过的视频',
                 action: {
                     title: '切换样式',
                     onClick: () => {
-                        $storage.put('style', 1)
+                        $storage.put('style', !style)
                         $ui.toast("切换成功")
                     }
                 }
@@ -32,17 +32,17 @@ module.exports = {
                 json.action = {
                     title: '切换样式',
                     onClick: () => {
-                        $storage.put('style', 0)
+                        $storage.put('style', !style)
                         $ui.toast("切换成功")
                     }
                 }
             }
-            if (style != 0) {
+            if (!style) {
                 data.push(json)
             }
             data.push({
                 style: 'icon',
-                title: style == 0 ? f.name : "全部视频",
+                title: style ? f.name : "全部视频",
                 summary: "全部视频",
                 thumb: f.avatar,
                 spanCount: 4,
@@ -53,7 +53,7 @@ module.exports = {
             
             data.push({
                 style: 'icon',
-                title: style == 0 ? f.name : "分类视频",
+                title: style ? f.name : "分类视频",
                 summary: "分类视频",
                 thumb: f.avatar,
                 spanCount: 4,
@@ -67,7 +67,7 @@ module.exports = {
             })
             data.push({
                 style: 'icon',
-                title: style == 0 ? f.name : "点赞过的视频",
+                title: style ? f.name : "点赞过的视频",
                 summary: "点赞过的视频",
                 thumb: f.avatar,
                 spanCount: 4,

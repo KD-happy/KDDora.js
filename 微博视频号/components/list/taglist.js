@@ -39,6 +39,7 @@ module.exports = {
                     })
                 })
             })
+            $ui.toast("加载完毕")
         }).catch(err => {
             $ui.alert("未知错误！！有可能是Cookie失效了")
         })
