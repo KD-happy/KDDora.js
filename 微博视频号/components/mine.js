@@ -144,7 +144,7 @@ module.exports = {
             onClick: async () => {
                 let pd = await $input.confirm({
                     title: "确认框",
-                    message: "是否清除所有用户的UID",
+                    message: "是否清除当前Cookie",
                     okBtn: "删除"
                 })
                 if (pd) {
@@ -162,6 +162,13 @@ module.exports = {
             onClick: async () => {
                 $clipboard.text = $storage.get("cookie")
                 $ui.toast("复制成功")
+            }
+        })
+        data.push({
+            title: "游客登录",
+            spanCount: 4,
+            onClick: async () => {
+                $router.to($route('web'))
             }
         })
         data.push({title: "UID操作",style: 'category'})
