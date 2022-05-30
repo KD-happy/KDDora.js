@@ -3,6 +3,7 @@ const calendar_event = require("./API/calendar_event");
 const exp_reward = require("./API/exp_reward");
 const vip_privilege = require("./API/vip_privilege");
 const nav_stat = require("./API/nav_stat");
+const wallet_getStatus = require("./API/wallet_getStatus");
 
 function formatUtcTime(v) { // 时间格式化
     if (!v) {
@@ -111,6 +112,7 @@ module.exports = {
         var info2 = await calendar_event(cookie);
         var info3 = await exp_reward(cookie);
         var info4 = await vip_privilege(cookie);
+        var info5 = await wallet_getStatus(cookie);
         var data = [];
         data.push({title: "当前用户",style: 'category'})
         if (info != false) {
@@ -125,7 +127,7 @@ module.exports = {
             data.push({
                 style: 'article',
                 title: '经验任务',
-                summary: `硬币: ${info.money}  B币: ${info.wallet.bcoin_balance}\nB币券: ${info4[0].state == 1 ? `已领取 - 剩余 ${info.wallet.coupon_balance}` : "未领取"}  优惠券: ${info4[1].state == 1 ? "已领取" : "未领取"}\n每日登录: ${info3.login ? "完成" : "未完成"},  每日观看: ${info3.watch ? "完成" : "未完成"}\n每日分享: ${info3.share ? "完成" : "未完成"},  投币次数: ${info3.coins/10}次`
+                summary: `硬币: ${info.money}  B币: ${info.wallet.bcoin_balance}  银币: ${info5.silver}  剩银币转硬币: ${info5.silver_2_coin_left}\nB币券: ${info4[0].state == 1 ? `已领取 - 剩余 ${info.wallet.coupon_balance}` : "未领取"}  优惠券: ${info4[1].state == 1 ? "已领取" : "未领取"}\n每日登录: ${info3.login ? "完成" : "未完成"},  每日观看: ${info3.watch ? "完成" : "未完成"}\n每日分享: ${info3.share ? "完成" : "未完成"},  投币次数: ${info3.coins/10}次`
             })
         } else {
             data.push({style: 'simple',thumb: "",title: "用户名: 游客", summary: "用户mid: 0"});
