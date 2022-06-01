@@ -1,10 +1,10 @@
 {
   "name": "wbsph",
   "displayName": "微博视频号",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "uuid": "cc3503c1-702b-4cf7-9e0b-be1bf1f200bf",
   "description": "没有描述",
-  "icon": "assets/新浪微博.svg",
+  "icon": "assets/weibo.svg",
   "prefs": "assets/prefs.json",
   "main": "main.js",
   "license": "UNLICENSED",
