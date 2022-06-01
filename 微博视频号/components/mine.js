@@ -104,6 +104,27 @@ async function update() {
         $ui.toast("更新成功")
     })
 }
+// 批量复制
+async function copyAll() {
+    var uidAll = []
+    this.UID.forEach(f => {
+        uidAll.push(f.uid)
+    })
+    $clipboard.text = uidAll.toString()
+    $ui.toast("复制成功")
+}
+// 批量添加
+async function insertAll() {
+    let uidAll = await $input.text({
+        title: '请输入批量UID',
+        hint: 'UID',
+        value: ''
+    })
+    uidAll = uidAll.split(',')
+    uidAll.forEach(f => {
+        putUID(f)
+    })
+}
 
 module.exports = {
     type: 'list',
@@ -211,6 +232,20 @@ module.exports = {
             spanCount: 4,
             onClick: async () => {
                 await update()
+            }
+        })
+        data.push({
+            title: "批量复制",
+            spanCount: 4,
+            onClick: async () => {
+                await copyAll()
+            }
+        })
+        data.push({
+            title: "批量添加",
+            spanCount: 4,
+            onClick: async () => {
+                await insertAll()
             }
         })
         data.push({title: "用户列表",style: 'category'})
