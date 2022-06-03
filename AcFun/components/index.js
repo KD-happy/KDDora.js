@@ -4,12 +4,12 @@ module.exports = {
         return [
             {
                 title: '首页',
-                image: $assets('首页.svg'),
+                image: $assets('home.svg'),
                 route: $route('home')
             },
             {
                 title: '关注',
-                image: $assets('我的关注.svg'),
+                image: $assets('follows.svg'),
                 route: $route('follows')
             }
         ]
