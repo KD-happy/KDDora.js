@@ -1,5 +1,4 @@
-array=(`ls -d */ | tr '/' ' '`)
-for var in ${array[@]}
+for i in $(ls -d */)
 do
-    tar -zcvf $var.dora $var
+    tar -zcvf ${i/'/'/''}.dora $i
 done
