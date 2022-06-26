@@ -5,6 +5,7 @@ var params;
 module.exports = {
     type: 'list',
     title: '哔哩哔哩 - 历史',
+    searchRoute: $route('search/search_historys'),
     async fetch({page}) {
         var history = await history_cursor(params, cookie);
         if (history != false) {

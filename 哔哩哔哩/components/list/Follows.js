@@ -3,6 +3,7 @@ const relation_tags = require("../API/relation_tags");
 module.exports = {
     title: '哔哩哔哩 - 关注列表',
     style: 'list',
+    searchRoute: $route('search/search_follows'),
     async fetch() {
         var tags = await relation_tags(cookie);
         if (tags != false) {

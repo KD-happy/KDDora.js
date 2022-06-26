@@ -11,6 +11,7 @@ module.exports = {
     type: 'list',
     async fetch({page, args}) {
         page = page || 1;
+        this.searchRoute = $route('search/search_videos', args)
         if (author.name == undefined) {
             var info2 = await info(args.mid);
             author = {
