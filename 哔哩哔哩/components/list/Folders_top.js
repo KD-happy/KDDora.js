@@ -30,6 +30,21 @@ module.exports = {
                     })
                     selected!=null ? ($storage.put("order", selected.order) & $ui.toast("设置成功")) : $ui.toast("取消设置");
                 }
+            },
+            {
+                title: '切换样式',
+                onClick: async () => {
+                    let pd = await $input.confirm({
+                        title: "切换样式",
+                        message: "当前样式显示在顶部，修改后是list点击",
+                        okBtn: '确定'
+                    })
+                    if (pd) {
+                        $storage.put("top", !top);
+                        $ui.toast("切换成功")
+                        getCookie()
+                    }
+                }
             }
         ]
         page = page || 1;

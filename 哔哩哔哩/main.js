@@ -8,8 +8,10 @@ console.info('Congratulation, your addon runs successfully!')
 
 module.exports = {
     async getCookie() {
+        console.log('this.top',this.top)
         var userlist = $storage.get("userlist");
         var order = $storage.get("order");
+        this.top = $storage.get("top") == undefined ? false && $storage.put("top", false) : $storage.get("top")
         if (order == null) {
             $storage.put("order", "mtime");
             this.order = "mtime";
@@ -39,6 +41,7 @@ module.exports = {
         this.cookie = cookie;
         this.mid = mid;
     },
+    top: false,
     cookie: "",
     mid: 0,
     order: '',

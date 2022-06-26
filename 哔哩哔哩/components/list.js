@@ -27,7 +27,13 @@ module.exports = {
         },
         {
             title: '收藏夹',
-            route: $route('list/Folders')
+            onClick: () => {
+                if ($storage.get("top")) {
+                    $router.to($route('list/Folders_top'))
+                } else {
+                    $router.to($route('list/Folders_list'))
+                }
+            }
         },
         {
             title: '关注列表',
@@ -36,7 +42,7 @@ module.exports = {
         {
             style: 'article',
             title: '介绍',
-            summary: `关注列表 - 支持UP主搜索\n历史 - 支持观看历史搜索\nUP视频详情页 - 支持视频搜索`
+            summary: `关注列表 - 支持UP主搜索\n历史 - 支持观看历史搜索\nUP视频详情页 - 支持视频搜索\n收藏夹 - 只支持list列表时视频搜索（当前${top ? "topTab" : "list"}）`
         }
     ]
 }

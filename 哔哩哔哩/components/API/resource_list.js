@@ -6,17 +6,18 @@ module.exports = resource_list;
  * 获取单个收藏夹详细内容
  * @param {Number} page 页数
  * @param {Number} id 收藏夹id
+ * @param {String} keyword 搜索关键字
  * @param {String} order 收藏排序
  * @param {String} cookie 请求Cookie
  * @returns {Object}
  */
-async function resource_list(page, id, order, cookie) {
+async function resource_list(page, id, keyword, order, cookie) {
     var url = 'https://api.bilibili.com/x/v3/fav/resource/list';
     var params = {
         media_id: id,
         pn: page,
         ps: 20,
-        keyword: '',
+        keyword: keyword,
         order: order, // mtime: 最近收藏, view: 最多播放, pubtime: 最新投稿
         type: 0,
         tid: 0,

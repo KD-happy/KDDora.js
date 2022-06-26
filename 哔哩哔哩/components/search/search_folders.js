@@ -3,9 +3,10 @@ const resource_list = require("../API/resource_list");
 module.exports = {
     type: 'list',
     async fetch({args, page}) {
-        this.searchRoute = $route('search/search_folders', args)
+        this.searchRoute = $route('list/Folder', args)
+        this.title = `收藏夹搜索 - ${args.keyword}`
         page = page || 1;
-        var list = await resource_list(page, args.id, "", order, cookie);
+        var list = await resource_list(page, args.id, args.keyword, order, cookie);
         var data = []
         if (list && list.medias!=null) {
             list.medias.forEach(m => {
@@ -45,13 +46,12 @@ module.exports = {
             } else {
                 return data;
             }
-        } else {
-            return [{
-                style: 'article',
-                title: '警告',
-                summary: `当前收藏夹没有任何内容（或 加载失败）`
-            }]
         }
+        return [{
+            style: 'article',
+            title: '搜索为空',
+            summary: `当前关键字 ${args.keyword} 在当前收藏夹不存在`
+        }];
     },
     beforeCreate() {
         getCookie();
