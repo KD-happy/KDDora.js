@@ -6,7 +6,7 @@ module.exports = {
             route: $route('list/dynamic')
         },
         {
-            title: '历史 - 支持搜索',
+            title: '历史',
             route: $route('list/history')
         },
         {
@@ -30,8 +30,13 @@ module.exports = {
             route: $route('list/Folders')
         },
         {
-            title: '关注列表 - 支持搜索',
+            title: '关注列表',
             route: $route('list/Follows')
+        },
+        {
+            style: 'article',
+            title: '介绍',
+            summary: `关注列表 - 支持UP主搜索\n历史 - 支持观看历史搜索\nUP视频详情页 - 支持视频搜索`
         }
     ]
 }

@@ -107,12 +107,14 @@ module.exports = {
     async fetch() {
         getCookie();
         var userlist = $storage.get("userlist");
-        var info = await nav(cookie);
-        var info1 = await nav_stat(cookie);
-        var info2 = await calendar_event(cookie);
-        var info3 = await exp_reward(cookie);
-        var info4 = await vip_privilege(cookie);
-        var info5 = await wallet_getStatus(cookie);
+        var [info, info1, info2, info3, info4, info5] = await $http.all([
+                nav(cookie),
+                nav_stat(cookie),
+                calendar_event(cookie),
+                exp_reward(cookie),
+                vip_privilege(cookie),
+                wallet_getStatus(cookie)
+            ])
         var data = [];
         data.push({title: "当前用户",style: 'category'})
         if (info != false) {
