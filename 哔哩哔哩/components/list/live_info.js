@@ -6,7 +6,16 @@ module.exports = {
     actions: [
         {
             title: '直播间号',
-            route: $route("list/live")
+            onClick: async () => {
+                let rid = await $input.number({
+                    title: '输入直播房间号',
+                    hint: '房间号',
+                    value: ''
+                })
+                $router.to($route('list/live', {
+                    rid: rid
+                }))
+            }
         }
     ],
     async fetch() {

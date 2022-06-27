@@ -61,7 +61,7 @@ async function playUrl(rid, quality, order) { // 房间号 画质 线路
     var url = 'http://api.live.bilibili.com/room/v1/Room/playUrl';
     var param = {
         cid: rid,
-        platform: 'web',
+        platform: 'h5',
         quality: quality
     }
     param = qs.stringify(param);
@@ -85,12 +85,14 @@ module.exports = {
     type: 'video',
     isLive: true,
     async fetch({ args }) {
+        console.log('args.rid',args)
         if (!args.rid) { // 判断要不要输入rid
             rid = await $input.number({
                 title: '输入直播房间号',
                 hint: '房间号',
                 value: ''
             })
+            args.rid = rid
         } else {
             rid = args.rid;
         }
