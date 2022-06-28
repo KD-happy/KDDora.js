@@ -1,12 +1,12 @@
 const login_log = require("../API/login_log");
 
 module.exports = {
-    type: 'list',
+    type: 'article',
     title: '登录记录',
     async fetch() {
-        var data = []
+        var content = null
         await login_log(cookie).then(res => {
-            let content = `<style>
+            content = `<style>
             * {
                 font-size: 13px;
             }
@@ -27,15 +27,12 @@ module.exports = {
             res.data.data!=null && res.data.data.list.forEach(f => {
                 content += `<span>${f.time_at}</span><span class="ip">${f.ip}</span><span class="right">${f.geo}</span><br>\n`
             })
-            data.push({
-                title: '登录记录',
-                style: 'richContent',
-                content: {
-                    html: content
-                }
-            })
         })
-        return data
+        return {
+            content: {
+                html: content
+            }
+        }
     },
     beforeCreate() {
         getCookie();

@@ -1,5 +1,6 @@
 module.exports = {
-    type: 'list',
+    type: 'topTab',
+    tabMode: 'fixed',
     items: [
         {
             title: '登录记录',
