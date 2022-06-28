@@ -40,6 +40,10 @@ module.exports = {
             route: $route('list/Follows')
         },
         {
+            title: '我的记录',
+            route: $route('record/record')
+        },
+        {
             style: 'article',
             title: '介绍',
             summary: `关注列表 - 支持UP主搜索\n历史 - 支持观看历史搜索\nUP视频详情页 - 支持视频搜索\n收藏夹 - 只支持list列表时视频搜索（当前${top ? "topTab" : "list"}）`
