@@ -19,8 +19,6 @@ module.exports = {
             }
         }
         var history = await api.history_cursor(params, cookie);
-        console.log(page)
-        console.log(params)
         if (history != false) {
             params = history.cursor;
             var data = [];
@@ -37,7 +35,7 @@ module.exports = {
                             image: m.cover,
                             route: $route(`bilibili://video/${m.history.bvid}`),
                             onLongClick: async () => {
-                                await pcslad(m.kid, m.history.bvid, m.author_mid, 0, true)
+                                await pcslad(m.kid, m.history.bvid, m.author_mid, 0, true, true)
                             }
                     })
                 }

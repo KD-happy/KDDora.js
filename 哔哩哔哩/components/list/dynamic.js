@@ -5,7 +5,7 @@ var dynamic_id;
 
 function getBeautiful(cards) {
     var data = cards.map(m => {
-        var card = JSON.parse(m.card);
+        var card = JSON.parse(m.card, null, );
         dynamic_id = m.desc.dynamic_id_str;
         return {
             style: 'live',
@@ -19,66 +19,7 @@ function getBeautiful(cards) {
             viewerCount: card.stat.view,
             route: $route(`bilibili://video/${card.short_link.substring(15)}`),
             onLongClick: async () => {
-                let selected = await $input.select({
-                    title: '更多操作',
-                    options: [
-                        { value: 'pubdate', title: '最新发布: pubdate' },
-                        { value: 'click', title: '最多播放: click' },
-                        { value: 'stow', title: '最多收藏: stow' },
-                        { value: 'like', title: '点赞' },
-                        { value: 'add', title: '投币' },
-                        { value: 'deal', title: '收藏视频' }
-                    ]
-                })
-                if (selected != null) {
-                    if (selected.value == 'pubdate' || selected.value == 'click' || selected.value == 'stow') {
-                        $router.to($route('list/space_video', {
-                            mid: card.owner.mid, order: selected.value
-                        }))
-                    } else if(selected.value == 'like') {
-                        api.archive_like(cookie, csrf, card.aid, null, 1).then(res => {
-                            if (res.data.code == 0) {
-                                $ui.toast("点赞成功");
-                            } else {
-                                $ui.toast(res.data.message)
-                            }
-                        })
-                    } else if (selected.value == 'add') {
-                        let pd = await $input.confirm({
-                            title: "投币",
-                            message: "是否投币",
-                            okBtn: '确定'
-                        })
-                        if (pd) {
-                            api.coin_add(cookie, csrf, card.aid, null, 1, 0).then(res => {
-                                if (res.data.code == 0) {
-                                    $ui.toast("投币成功")
-                                } else {
-                                    $ui.toast(res.data.message)
-                                }
-                            })
-                        } else {
-                            $ui.toast("取消投币")
-                        }
-                    } else if (selected.value = 'deal') {
-                        let list = await api.folder_created_list_all(mid, cookie)
-                        let selected = await $input.select({
-                            title: '选择收藏位置',
-                            options: list
-                        })
-                        if (selected != null) {
-                            api.resource_deal(cookie, csrf, card.aid, selected.id, true).then(res => {
-                                if (res.data.code == 0) {
-                                    $ui.toast("收藏成功")
-                                } else {
-                                    $ui.toast(res.data.message)
-                                }
-                            })
-                        } else {
-                            $ui.toast("取消收藏")
-                        }
-                    }
-                }
+                await pcslad(card.aid, null, card.owner.mid, 0, true, true)
             }
         }
     })

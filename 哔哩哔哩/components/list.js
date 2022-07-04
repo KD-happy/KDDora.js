@@ -36,6 +36,10 @@ module.exports = {
             }
         },
         {
+            title: '稍后再看',
+            route: $route('list/history_toview')
+        },
+        {
             title: '关注列表',
             route: $route('list/Follows')
         },

@@ -15,6 +15,17 @@ function formatUtcTime(v) { // 时间格式化
         ":" + (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
 }
 
+function formatUtcTimes(v) { // 时间格式化
+    if (!v) {
+        return ''
+    }
+    let date = new Date(v);
+    date = new Date(date.valueOf());
+    return date.getFullYear() +
+        "-" + ((date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) +
+        "-" + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
+}
+
 function hasId(mid) {
     var userlist = $storage.get("userlist");
     if (userlist.length > 0) {
@@ -66,7 +77,7 @@ async function showConfig(m) { // 显示配置
 }
 
 async function attribute(m) { // 属性
-    $ui.showCode(`用户MID: ${m.mid}\n用户名: ${m.name}\nCookie: ${m.cookie}`);
+    $ui.showCode(`用户MID: ${m.mid}\n用户名: ${m.name}\nCookie: ${m.cookie}\ncsrf: ${m.csrf}`);
 }
 
 async function sorting(m) { // 切换排序
@@ -103,7 +114,7 @@ module.exports = {
     async fetch() {
         getCookie();
         var userlist = $storage.get("userlist");
-        var [info, info1, info2, info3, info4, info5] = await $http.all([
+        var [info, info1, info2, info3, info4, info5] = await $axios.all([
                 api.nav(cookie),
                 api.nav_stat(cookie),
                 api.calendar_event(cookie),
@@ -125,7 +136,12 @@ module.exports = {
             data.push({
                 style: 'article',
                 title: '经验任务',
-                summary: `硬币: ${info.money}  B币: ${info.wallet.bcoin_balance}  银币: ${info5.silver}  剩银币转硬币: ${info5.silver_2_coin_left}\nB币券: ${info4[0].state == 1 ? `已领取 - 剩余 ${info.wallet.coupon_balance}` : "未领取"}  优惠券: ${info4[1].state == 1 ? "已领取" : "未领取"}\n每日登录: ${info3.login ? "完成" : "未完成"},  每日观看: ${info3.watch ? "完成" : "未完成"}\n每日分享: ${info3.share ? "完成" : "未完成"},  投币次数: ${info3.coins/10}次`
+                summary: `硬币: ${info.money}  B币: ${info.wallet.bcoin_balance}  银币: ${info5.silver}  剩银币转硬币: ${info5.silver_2_coin_left}\n每日登录: ${info3.login ? "完成" : "未完成"},  每日观看: ${info3.watch ? "完成" : "未完成"}\n每日分享: ${info3.share ? "完成" : "未完成"},  投币次数: ${info3.coins/10}次`
+            })
+            data.push({
+                style: 'article',
+                title: '兑换详细信息',
+                summary: `B币券: ${info4[0].state == 1 ? `已领取 - 剩余 ${info.wallet.coupon_balance}` : "未领取"}  优惠券: ${info4[1].state == 1 ? "已领取" : "未领取"}\nB币券: ${formatUtcTimes(info4[0].period_end_unix*1000)}  优惠券: ${formatUtcTimes(info4[1].period_end_unix*1000)}`
             })
         } else {
             data.push({style: 'simple',thumb: "",title: "用户名: 游客", summary: "用户mid: 0"});
@@ -192,6 +208,74 @@ module.exports = {
                     $ui.toast("添加成功");
                 } else {
                     $ui.toast("取消添加");
+                }
+            }
+        })
+        if (info4[0].state == 0 || info4[1].state == 0 || info.wallet.coupon_balance > 0) {
+            data.push({title: "会员鼓励兑换",style: 'category'})
+        }
+        info4[0].state == 0 && data.push({
+            title: 'B币兑换',
+            spanCount: 4,
+            onClick: () => {
+                api.privilege_receive(cookie, csrf, 1).then(res => {
+                    if (res.data.code == 0) {
+                        $ui.toast("兑换成功")
+                    } else {
+                        $ui.toast(res.data.message)
+                    }
+                })
+            }
+        })
+        info4[1].state == 0 && data.push({
+            title: '优惠券兑换',
+            spanCount: 4,
+            onClick: () => {
+                api.privilege_receive(cookie, csrf, 2).then(res => {
+                    if (res.data.code == 0) {
+                        $ui.toast("兑换成功")
+                    } else {
+                        $ui.toast(res.data.message)
+                    }
+                })
+            }
+        })
+        info.wallet.coupon_balance > 0 && data.push({
+            title: '充电',
+            spanCount: 4,
+            onClick: async () => {
+                let up_mid = await $input.number({
+                    title: "充电（默认是自己的mid）",
+                    hint: "请输入充电UP主的mid",
+                    value: mid
+                })
+                if (up_mid != null) {
+                    let up_name = ""
+                    await api.info(up_mid).then(res => {
+                        up_name = res != undefined ? res.name : "啥都木有"
+                    })
+                    let bp_num = await $input.number({
+                        title: "要充电的B币 - 默认全部B币券",
+                        hint:  `将为TA ${up_name} 充电`,
+                        value: info.wallet.coupon_balance
+                    })
+                    if (bp_num != null) {
+                        api.trade_elec_pay_quick(cookie, csrf, bp_num, true, up_mid, 'up', up_mid).then(res => {
+                            if (res.data.code == 0) {
+                                if (res.data.data.status > 0) {
+                                    $ui.toast("充电成功")
+                                } else {
+                                    $ui.toast(res.data.data.msg)
+                                }
+                            } else {
+                                $ui.toast(res.data.message)
+                            }
+                        })
+                    } else {
+                        $ui.toast("取消充电")
+                    }
+                } else {
+                    $ui.toast("取消充电")
                 }
             }
         })

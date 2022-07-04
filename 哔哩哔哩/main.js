@@ -88,25 +88,15 @@ module.exports = {
      * @param {Boolean} deal 是否收藏
      */
     async lad(aid, bvid, deal) {
+        let options = []
+        options.push({value: 'like', title: '点赞'})
+        options.push({value: 'add', title: '投币'})
         if (deal) {
-            selected = await $input.select({
-                title: '更多操作',
-                options: [
-                    {value: 'like', title: '点赞'},
-                    {value: 'add', title: '投币'},
-                    {value: 'deal', title: '收藏视频'}
-                ]
-            })
+            options.push({value: 'deal', title: '收藏视频'})
         } else {
-            selected = await $input.select({
-                title: '更多操作',
-                options: [
-                    {value: 'like', title: '点赞'},
-                    {value: 'add', title: '投币'},
-                    {value: 'deal', title: '取消收藏'}
-                ]
-            })
+            options.push({value: 'deal', title: '取消收藏'})
         }
+        options.push({value: 'history', title: '添加稍后再看'})
         if (selected != null) {
             if (selected.value == 'like') {
                 api.archive_like(cookie, csrf, aid, bvid, 1).then(res => {
@@ -135,19 +125,31 @@ module.exports = {
                 }
             } else if (selected.value == 'deal') {
                 if (deal) {
-                    let list = await api.folder_created_list_all(mid, cookie)
+                    let list = await api.folder_created_list_all(mid, cookie, aid)
                     let selected = await $input.select({
-                        title: '选择收藏位置',
-                        options: list
-                    })
-                    if (selected != null) {
-                        api.resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
-                            if (res.data.code == 0) {
-                                $ui.toast("收藏成功")
+                        title: '选择收藏位置（*添加了的）',
+                        options: list.map(m => {
+                            if (m.fav_state == 1) {
+                                m.title = `${m.title} *`
+                                return m
                             } else {
-                                $ui.toast(res.data.message)
+                                return m
                             }
                         })
+                    })
+                    if (selected != null) {
+                        if (selected.fav_state == 1) {
+                            $ui.toast("已经添加过了")
+                            await lad(aid, bvid, author_mid, deal_id, deal)
+                        } else {
+                            api.resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
+                                if (res.data.code == 0) {
+                                    $ui.toast("收藏成功")
+                                } else {
+                                    $ui.toast(res.data.message)
+                                }
+                            })
+                        }
                     } else {
                         $ui.toast("取消收藏")
                     }
@@ -169,6 +171,26 @@ module.exports = {
                         $ui.toast("取消 取消收藏")
                     }
                 }
+            } else if (selected.value == 'history') {
+                let pd = true
+                await api.history_toview(cookie).then(res => {
+                    res.data.data.list.forEach(f => {
+                        if (f.aid == aid || f.bvid == bvid) {
+                            pd = false
+                        }
+                    })
+                })
+                if (pd) {
+                    api.history_toview_add(cookie, csrf, aid, bvid).then(res => {
+                        if (res.data.code == 0) {
+                            $ui.toast("添加成功")
+                        } else {
+                            $ui.toast(res.data.message)
+                        }
+                    })
+                } else {
+                    $ui.toast("稍后再看 早已存在~")
+                }
             }
         }
     },
@@ -179,33 +201,29 @@ module.exports = {
      * @param {Number} author_mid 用户mid
      * @param {Number} deal_id 收藏夹id
      * @param {Boolean} deal 是否收藏
+     * @param {Boolean} toview 是否稍后再看
      */
-    async pcslad(aid, bvid, author_mid, deal_id, deal) {
+    async pcslad(aid, bvid, author_mid, deal_id, deal, toview) {
+        let options = []
+        options.push({value: 'pubdate', title: '最新发布: pubdate'})
+        options.push({value: 'click', title: '最多播放: click'})
+        options.push({value: 'stow', title: '最多收藏: stow'})
+        options.push({value: 'like', title: '点赞'})
+        options.push({value: 'add', title: '投币'})
         if (deal) {
-            selected = await $input.select({
-                title: '更多操作',
-                options: [
-                    {value: 'pubdate', title: '最新发布: pubdate'},
-                    {value: 'click', title: '最多播放: click'},
-                    {value: 'stow', title: '最多收藏: stow'},
-                    {value: 'like', title: '点赞'},
-                    {value: 'add', title: '投币'},
-                    {value: 'deal', title: '收藏视频'}
-                ]
-            })
+            options.push({value: 'deal', title: '收藏视频'})
         } else {
-            selected = await $input.select({
-                title: '更多操作',
-                options: [
-                    {value: 'pubdate', title: '最新发布: pubdate'},
-                    {value: 'click', title: '最多播放: click'},
-                    {value: 'stow', title: '最多收藏: stow'},
-                    {value: 'like', title: '点赞'},
-                    {value: 'add', title: '投币'},
-                    {value: 'deal', title: '取消收藏'}
-                ]
-            })
+            options.push({value: 'deal', title: '取消收藏'})
         }
+        if (toview) {
+            options.push({value: 'toview', title: '添加稍后再看'})
+        } else {
+            options.push({value: 'toview', title: '删除稍后再看'})
+        }
+        selected = await $input.select({
+            title: '更多操作',
+            options: options
+        })
         if (selected != null) {
             if (selected.value == 'pubdate' || selected.value == 'click' || selected.value == 'stow') {
                 $router.to($route('list/space_video', {
@@ -238,19 +256,31 @@ module.exports = {
                 }
             } else if (selected.value == 'deal') {
                 if (deal) {
-                    let list = await api.folder_created_list_all(mid, cookie)
+                    let list = await api.folder_created_list_all(mid, cookie, aid)
                     let selected = await $input.select({
-                        title: '选择收藏位置',
-                        options: list
-                    })
-                    if (selected != null) {
-                        api.resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
-                            if (res.data.code == 0) {
-                                $ui.toast("收藏成功")
+                        title: '选择收藏位置（*添加了的）',
+                        options: list.map(m => {
+                            if (m.fav_state == 1) {
+                                m.title = `${m.title} *`
+                                return m
                             } else {
-                                $ui.toast(res.data.message)
+                                return m
                             }
                         })
+                    })
+                    if (selected != null) {
+                        if (selected.fav_state == 1) {
+                            $ui.toast("已经添加过了")
+                            await pcslad(aid, bvid, author_mid, deal_id, deal, true)
+                        } else {
+                            api.resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
+                                if (res.data.code == 0) {
+                                    $ui.toast("收藏成功")
+                                } else {
+                                    $ui.toast(res.data.message)
+                                }
+                            })
+                        }
                     } else {
                         $ui.toast("取消收藏")
                     }
@@ -261,7 +291,6 @@ module.exports = {
                         okBtn: '确定'
                     })
                     if (pd) {
-                        console.log(cookie, csrf, aid, deal_id, deal)
                         api.resource_deal(cookie, csrf, aid, deal_id, deal).then(res => {
                             if (res.data.code == 0) {
                                 $ui.toast("取消收藏成功")
@@ -272,6 +301,36 @@ module.exports = {
                     } else {
                         $ui.toast("取消 取消收藏")
                     }
+                }
+            } else if (selected.value == 'toview') {
+                if (toview) {
+                    let pd = true
+                    await api.history_toview(cookie).then(res => {
+                        res.data.data.list.forEach(f => {
+                            if (f.aid == aid || f.bvid == bvid) {
+                                pd = false
+                            }
+                        })
+                    })
+                    if (pd) {
+                        api.history_toview_add(cookie, csrf, aid, bvid).then(res => {
+                            if (res.data.code == 0) {
+                                $ui.toast("添加成功")
+                            } else {
+                                $ui.toast(res.data.message)
+                            }
+                        })
+                    } else {
+                        $ui.toast("稍后再看 早已存在~")
+                    }
+                } else {
+                    api.history_toview_del(cookie, this.csrf, aid, bvid).then(res => {
+                        if (res.data.code == 0) {
+                            $ui.toast("删除成功")
+                        } else {
+                            $ui.toast(res.data.message)
+                        }
+                    })
                 }
             }
         }

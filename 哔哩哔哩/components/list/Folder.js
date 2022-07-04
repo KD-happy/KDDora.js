@@ -22,7 +22,7 @@ module.exports = {
                     viewerCount: m.cnt_info.play,
                     route: $route(`bilibili://video/${m.bvid}`),
                     onLongClick: async () => {
-                        await pcslad(m.id, m.bvid, m.upper.mid, args.id, false)
+                        await pcslad(m.id, m.bvid, m.upper.mid, args.id, false, true)
                     }
                 })
             })

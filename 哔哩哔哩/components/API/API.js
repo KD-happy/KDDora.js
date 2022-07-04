@@ -4,6 +4,58 @@ const qs = require("qs");
 module.exports = () => {
     return {
         /**
+         * 获取当前视频 点赞、收藏、投币次数
+         * @param {String} cookie Cookie
+         * @param {Number} aid 视频 aid
+         * @param {String} bvid 视频 bvid
+         * @returns {Promise}
+         */
+        archive_relation: async (cookie, aid, bvid) => {
+            let params
+            if (aid != null) {
+                params = {
+                    aid: aid
+                }
+            } else {
+                params = {
+                    bvid: bvid
+                }
+            }
+            return axios.get('https://api.bilibili.com/x/web-interface/archive/relation', {
+                params: params,
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
+         * 获取视频 aid bvid share coin like favorite
+         * @param {String} cookie Cookie
+         * @param {Number} aid 视频 aid
+         * @param {String} bvid 视频 bvid
+         * @returns {Promise}
+         */
+        archive_stat: async (cookie, aid, bvid) => {
+            let params
+            if (aid != null) {
+                params = {
+                    aid: aid
+                }
+            } else {
+                params = {
+                    bvid: bvid
+                }
+            }
+            return axios.get('https://api.bilibili.com/x/web-interface/archive/stat', {
+                params: params,
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
          * 搜索视频
          * @param {String} mid 用户Mid
          * @param {Number} pn 页数
@@ -112,7 +164,7 @@ module.exports = () => {
                     select_like: select_like
                 }
             }
-            return axios.post('http://api.bilibili.com/x/web-interface/coin/add', qs.stringify(data), {
+            return axios.post('https://api.bilibili.com/x/web-interface/coin/add', qs.stringify(data), {
                 headers: {
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
                     'cookie': cookie
@@ -242,13 +294,23 @@ module.exports = () => {
          * 获取全部收藏夹信息 标签
          * @param {Number} mid 用户mid
          * @param {String} cookie 请求Cookie
+         * @param {Number} rid aid 查看视频在收藏夹中的位置
          * @returns {Object}
          */
-        folder_created_list_all: async (mid, cookie) => {
+        folder_created_list_all: async (mid, cookie, rid=0) => {
             var url = "https://api.bilibili.com/x/v3/fav/folder/created/list-all";
-            var params = {
-                up_mid: mid,
-                jsonp: 'jsonp'
+            var params;
+            if (rid != 0) {
+                params = {
+                    up_mid: mid,
+                    jsonp: 'jsonp',
+                    rid: rid
+                }
+            } else {
+                params = {
+                    up_mid: mid,
+                    jsonp: 'jsonp'
+                }
             }
             try {
                 var res = await axios.get(url, {
@@ -335,6 +397,75 @@ module.exports = () => {
             }
             return axios.get('https://api.bilibili.com/x/web-goblin/history/search', {
                 params: params,
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
+         * 稍后再看
+         * @param {String} cookie Cookie
+         * @returns {Promise}
+         */
+        history_toview: async (cookie) => {
+            return axios.get('https://api.bilibili.com/x/v2/history/toview/web', {
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
+         * 添加稍后再看
+         * @param {String} cookie Cookie
+         * @param {String} csrf 用户验证
+         * @param {Number} aid 视频 aid
+         * @param {String} bvid 视频 bvid
+         * @returns {Promise}
+         */
+        history_toview_add: async (cookie, csrf, aid, bvid) => {
+            let data
+            if (aid != null) {
+                data = {
+                    aid: aid,
+                    csrf: csrf
+                }
+            } else {
+                data = {
+                    bvid: bvid,
+                    csrf: csrf
+                }
+            }
+            return axios.post('https://api.bilibili.com/x/v2/history/toview/add', qs.stringify(data), {
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
+         * 从稍后再看删除
+         * @param {String} cookie Cookie
+         * @param {String} csrf 用户验证
+         * @param {Number} aid 视频 aid
+         * @param {String} bvid 视频 bvid
+         * @returns {Promise}
+         */
+        history_toview_del: async (cookie, csrf, aid, bvid) => {
+            let data
+            if (aid != null) {
+                data = {
+                    aid: aid,
+                    csrf: csrf
+                }
+            } else {
+                data = {
+                    bvid: bvid,
+                    csrf: csrf
+                }
+            }
+            return axios.post('https://api.bilibili.com/x/v2/history/toview/del', qs.stringify(data), {
                 headers: {
                     'cookie': cookie,
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
@@ -452,6 +583,25 @@ module.exports = () => {
                 }
             });
             return res.data.data.list;
+        },
+        /**
+         * 兑换优惠券
+         * @param {String} cookie Cookie
+         * @param {String} csrf 用户验证
+         * @param {Number} type 1: B币、2: 优惠券
+         * @returns {Promise}
+         */
+        privilege_receive: async (cookie, csrf, type) => {
+            let data = {
+                type: type,
+                csrf: csrf
+            }
+            return axios.post('https://api.bilibili.com/x/vip/privilege/receive', qs.stringify(data), {
+                headers: {
+                    "cookie": cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取排行
@@ -705,6 +855,34 @@ module.exports = () => {
                 return false;
             }
             return res.data.data.item;
+        },
+        /**
+         * B币充电
+         * @param {String} cookie Cookie
+         * @param {String} csrf 用户验证
+         * @param {Number} bp_num 贝壳数
+         * @param {Boolean} is_bp_remains_prior 是否优先扣除B币余额
+         * @param {Nubmer} up_mid UP主的mid
+         * @param {String} otype 充电来源 up：空间充电、archive：视频充电
+         * @param {Nubmer} oid 充电来源代码 空间充电：充电对象用户mid、视频充电：稿件avid
+         * @returns {Promise}
+         */
+        trade_elec_pay_quick: async (cookie, csrf, bp_num, is_bp_remains_prior, up_mid, otype, oid) => {
+            let data = {
+                bp_num: bp_num,
+                is_bp_remains_prior: is_bp_remains_prior,
+                up_mid: up_mid,
+                otype: otype,
+                oid: oid,
+                csrf: csrf
+            }
+            return axios.post('https://api.bilibili.com/x/ugcpay/web/v2/trade/elec/pay/quick', qs.stringify(data), {
+                headers: {
+                    'cookie': cookie,
+                    'referer': 'https://space.bilibili.com/',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取 优惠券 和 B币券
