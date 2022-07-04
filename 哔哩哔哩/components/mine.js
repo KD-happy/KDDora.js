@@ -138,12 +138,12 @@ module.exports = {
         data.push({title: "登录操作",style: 'category'})
         data.push({
             title: "登录",
-            spanCount: 6,
+            spanCount: 4,
             route: $route("web_login")
         })
         data.push({
             title: "添加Cookie",
-            spanCount: 6,
+            spanCount: 4,
             onClick: async () => {
                 var myCookie = await $input.text({
                     title: "添加Cookie",
@@ -172,6 +172,28 @@ module.exports = {
                     } else {
                         $ui.toast("添加失败, Cookie失效");
                     }
+                } else {
+                    $ui.toast("取消添加");
+                }
+            }
+        })
+        data.push({
+            title: "添加csrf",
+            spanCount: 4,
+            onClick: async () => {
+                let myCsrf = await $input.text({
+                    title: "添加csrf",
+                    hint: "请输入csrf",
+                    value: ""
+                })
+                if (myCsrf != null) {
+                    userlist.forEach(f => {
+                        if (f.is_login) {
+                            f.csrf = myCsrf
+                        }
+                    })
+                    $storage.put("userlist", userlist);
+                    $ui.toast("添加成功");
                 } else {
                     $ui.toast("取消添加");
                 }

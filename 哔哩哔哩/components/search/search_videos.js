@@ -1,5 +1,7 @@
 const info = require("../API/info");
 const arc_search = require("../API/arc_search");
+const folder_created_list_all = require("../API/folder_created_list_all");
+const resource_deal = require("../API/resource_deal");
 
 var titles = {
     pubdate: '最新发布',
@@ -29,7 +31,10 @@ module.exports = {
                     title: f.title,
                     image: f.pic,
                     viewerCount: f.play,
-                    route: $route(`bilibili://video/${f.bvid}`)
+                    route: $route(`bilibili://video/${f.bvid}`),
+                    onLongClick: async () => {
+                        await lad(f.aid, null, true)
+                    }
                 })
             })
             if (data.length == 0 && page == 1) {

@@ -1,5 +1,9 @@
+const archive_like = require("../API/archive_like");
+const coin_add = require("../API/coin_add");
 const info = require("../API/info");
 const space_arc_search = require("../API/space_arc_search");
+const folder_created_list_all = require("../API/folder_created_list_all");
+const resource_deal = require("../API/resource_deal");
 
 var titles = {
     pubdate: '最新发布',
@@ -29,7 +33,10 @@ module.exports = {
                 title: m.title,
                 image: m.pic,
                 viewerCount: m.play,
-                route: $route(`bilibili://video/${m.bvid}`)
+                route: $route(`bilibili://video/${m.bvid}`),
+                onLongClick: async () => {
+                    await lad(m.aid, null, true)
+                }
             }
         })
         if (data.length == 30) {

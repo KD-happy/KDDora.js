@@ -25,19 +25,7 @@ module.exports = {
                         order: 'pubdate'
                     }),
                     onLongClick: async () => {
-                        let selected = await $input.select({
-                            title: 'UP视频排列顺序',
-                            options: [
-                                {value: 'pubdate', title: '最新发布: pubdate'},
-                                {value: 'click', title: '最多播放: click'},
-                                {value: 'stow', title: '最多收藏: stow'}
-                            ]
-                        })
-                        if (selected != null) {
-                            $router.to($route('list/space_video', {
-                                mid: m.mid, order: selected.value
-                            }))
-                        }
+                        await pcs(m.mid)
                     }
                 }
             })
@@ -56,19 +44,7 @@ module.exports = {
                         order: 'pubdate'
                     }),
                     onLongClick: async () => {
-                        let selected = await $input.select({
-                            title: 'UP视频排列顺序',
-                            options: [
-                                {value: 'pubdate', title: '最新发布: pubdate'},
-                                {value: 'click', title: '最多播放: click'},
-                                {value: 'stow', title: '最多收藏: stow'}
-                            ]
-                        })
-                        if (selected != null) {
-                            $router.to($route('list/space_video', {
-                                mid: m.mid, order: selected.value
-                            }))
-                        }
+                        await pcs(m.mid)
                     }
                 }
             })

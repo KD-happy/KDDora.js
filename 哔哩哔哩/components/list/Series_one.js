@@ -18,22 +18,13 @@ module.exports = {
                 viewerCount: m.stat.view,
                 route: $route(`bilibili://video/${m.bvid}`),
                 onLongClick: async () => {
-                    let selected = await $input.select({
-                        title: 'UP视频排列顺序',
-                        options: [
-                            {value: 'pubdate', title: '最新发布: pubdate'},
-                            {value: 'click', title: '最多播放: click'},
-                            {value: 'stow', title: '最多收藏: stow'}
-                        ]
-                    })
-                    if (selected != null) {
-                        $router.to($route('list/space_video', {
-                            mid: m.owner.mid, order: selected.value
-                        }))
-                    }
+                    await pcslad(m.aid, m.bvid, m.owner.mid, 0, true)
                 }
             }
         })
         return data;
+    },
+    beforeCreate() {
+        getCookie();
     }
 }

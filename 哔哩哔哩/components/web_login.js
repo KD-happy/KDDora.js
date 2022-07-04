@@ -29,6 +29,7 @@ module.exports = {
                 onClick: async () => {
                     if (this.cookies.SESSDATA != null) {
                         var myCookie = "SESSDATA=" + this.cookies.SESSDATA;
+                        var csrf = this.cookies.bili_jct;
                         var user = await nav(myCookie);
                         if (user != false) {
                             if (hasId(user.mid)) {
@@ -40,6 +41,7 @@ module.exports = {
                                     name: user.uname,
                                     face: user.face,
                                     cookie: myCookie,
+                                    csrf: csrf,
                                     is_login: false
                                 })
                                 $storage.put("userlist", userlist);

@@ -34,20 +34,7 @@ module.exports = {
                         rid: /(\d+)/g.exec(m.link)[0]
                     }),
                     onLongClick: async () => {
-                        let selected = await $input.select({
-                            title: 'UP视频排列顺序',
-                            options: [
-                                {value: 'pubdate', title: '最新发布: pubdate'},
-                                {value: 'click', title: '最多播放: click'},
-                                {value: 'stow', title: '最多收藏: stow'}
-                            ]
-                        })
-                        if (selected != null) {
-                            console.log(m.upper)
-                            $router.to($route('list/space_video', {
-                                mid: m.uid, order: selected.value
-                            }))
-                        }
+                        await pcs(m.uid)
                     }
                 }
             })

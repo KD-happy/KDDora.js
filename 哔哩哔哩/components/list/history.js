@@ -7,7 +7,19 @@ module.exports = {
     title: '哔哩哔哩 - 历史',
     searchRoute: $route('search/search_historys'),
     async fetch({page}) {
+        if (page) {
+            page = page
+        } else {
+            page = 1
+            params = {
+                'max': '',
+                'view_at': '',
+                'business': ''
+            }
+        }
         var history = await history_cursor(params, cookie);
+        console.log(page)
+        console.log(params)
         if (history != false) {
             params = history.cursor;
             var data = [];
@@ -24,19 +36,7 @@ module.exports = {
                             image: m.cover,
                             route: $route(`bilibili://video/${m.history.bvid}`),
                             onLongClick: async () => {
-                                let selected = await $input.select({
-                                    title: 'UP视频排列顺序',
-                                    options: [
-                                        {value: 'pubdate', title: '最新发布: pubdate'},
-                                        {value: 'click', title: '最多播放: click'},
-                                        {value: 'stow', title: '最多收藏: stow'}
-                                    ]
-                                })
-                                if (selected != null) {
-                                    $router.to($route('list/space_video', {
-                                        mid: m.author_mid, order: selected.value
-                                    }))
-                                }
+                                await pcslad(m.kid, m.history.bvid, m.author_mid, 0, true)
                             }
                     })
                 }
@@ -53,10 +53,5 @@ module.exports = {
     },
     beforeCreate() {
         getCookie();
-        params = {
-            'max': '',
-            'view_at': '',
-            'business': ''
-        };
     }
 }

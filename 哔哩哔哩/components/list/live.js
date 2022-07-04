@@ -85,7 +85,6 @@ module.exports = {
     type: 'video',
     isLive: true,
     async fetch({ args }) {
-        console.log('args.rid',args)
         if (!args.rid) { // 判断要不要输入rid
             rid = await $input.number({
                 title: '输入直播房间号',
