@@ -1,4 +1,5 @@
-const history_cursor = require("../API/history_cursor")
+const API = require("../API/API");
+const api = API();
 
 var params;
 
@@ -17,7 +18,7 @@ module.exports = {
                 'business': ''
             }
         }
-        var history = await history_cursor(params, cookie);
+        var history = await api.history_cursor(params, cookie);
         console.log(page)
         console.log(params)
         if (history != false) {

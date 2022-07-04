@@ -1,10 +1,11 @@
-const ranking = require("../API/ranking");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
     async fetch({args}) {
         rid = args.rid;
-        var list = await ranking(args.rid, args.type, cookie);
+        var list = await api.ranking(args.rid, args.type, cookie);
         var data = list.map(m => {
             return {
                 style: 'live',

@@ -1,10 +1,11 @@
-const coin_log = require("../API/coin_log");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'article',
     async fetch() {
         var content = null
-        await coin_log(cookie).then(res => {
+        await api.coin_log(cookie).then(res => {
             content = `<style>
             * {
                 font-size: 13px;

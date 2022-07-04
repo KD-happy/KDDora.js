@@ -1,4 +1,5 @@
-const w_live_users = require("../API/w_live_users");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
@@ -19,9 +20,9 @@ module.exports = {
         }
     ],
     async fetch() {
-        var list = await w_live_users(0, cookie);
+        var list = await api.w_live_users(0, cookie);
         if (list.count > 0) {
-            list = await w_live_users(list.count, cookie);
+            list = await api.w_live_users(list.count, cookie);
             var data = list.items.map(m => {
                 return {
                     style: 'live',

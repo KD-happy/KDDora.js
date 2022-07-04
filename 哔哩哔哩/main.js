@@ -1,7 +1,5 @@
-const archive_like = require("./components/API/archive_like");
-const coin_add = require("./components/API/coin_add");
-const resource_deal = require("./components/API/resource_deal");
-const folder_created_list_all = require("./components/API/folder_created_list_all");
+const API = require("./components/API/API");
+const api = API();
 
 if (typeof $dora == 'undefined') {
     console.error('This project runs only in Dora.js.')
@@ -111,7 +109,7 @@ module.exports = {
         }
         if (selected != null) {
             if (selected.value == 'like') {
-                archive_like(cookie, csrf, aid, bvid, 1).then(res => {
+                api.archive_like(cookie, csrf, aid, bvid, 1).then(res => {
                     if (res.data.code == 0) {
                         $ui.toast("点赞成功");
                     } else {
@@ -125,7 +123,7 @@ module.exports = {
                     okBtn: '确定'
                 })
                 if (pd) {
-                    coin_add(cookie, csrf, aid, bvid, 1, 0).then(res => {
+                    api.coin_add(cookie, csrf, aid, bvid, 1, 0).then(res => {
                         if (res.data.code == 0) {
                             $ui.toast("投币成功")
                         } else {
@@ -137,13 +135,13 @@ module.exports = {
                 }
             } else if (selected.value == 'deal') {
                 if (deal) {
-                    let list = await folder_created_list_all(mid, cookie)
+                    let list = await api.folder_created_list_all(mid, cookie)
                     let selected = await $input.select({
                         title: '选择收藏位置',
                         options: list
                     })
                     if (selected != null) {
-                        resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
+                        api.resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
                             if (res.data.code == 0) {
                                 $ui.toast("收藏成功")
                             } else {
@@ -160,7 +158,7 @@ module.exports = {
                         okBtn: '确定'
                     })
                     if (pd) {
-                        resource_deal(cookie, csrf, aid, deal_id, deal).then(res => {
+                        api.resource_deal(cookie, csrf, aid, deal_id, deal).then(res => {
                             if (res.data.code == 0) {
                                 $ui.toast("取消收藏成功")
                             } else {
@@ -214,7 +212,7 @@ module.exports = {
                     mid: author_mid, order: selected.value
                 }))
             } else if(selected.value == 'like') {
-                archive_like(cookie, csrf, aid, bvid, 1).then(res => {
+                api.archive_like(cookie, csrf, aid, bvid, 1).then(res => {
                     if (res.data.code == 0) {
                         $ui.toast("点赞成功");
                     } else {
@@ -228,7 +226,7 @@ module.exports = {
                     okBtn: '确定'
                 })
                 if (pd) {
-                    coin_add(cookie, csrf, aid, bvid, 1, 0).then(res => {
+                    api.coin_add(cookie, csrf, aid, bvid, 1, 0).then(res => {
                         if (res.data.code == 0) {
                             $ui.toast("投币成功")
                         } else {
@@ -240,13 +238,13 @@ module.exports = {
                 }
             } else if (selected.value == 'deal') {
                 if (deal) {
-                    let list = await folder_created_list_all(mid, cookie)
+                    let list = await api.folder_created_list_all(mid, cookie)
                     let selected = await $input.select({
                         title: '选择收藏位置',
                         options: list
                     })
                     if (selected != null) {
-                        resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
+                        api.resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
                             if (res.data.code == 0) {
                                 $ui.toast("收藏成功")
                             } else {
@@ -264,7 +262,7 @@ module.exports = {
                     })
                     if (pd) {
                         console.log(cookie, csrf, aid, deal_id, deal)
-                        resource_deal(cookie, csrf, aid, deal_id, deal).then(res => {
+                        api.resource_deal(cookie, csrf, aid, deal_id, deal).then(res => {
                             if (res.data.code == 0) {
                                 $ui.toast("取消收藏成功")
                             } else {

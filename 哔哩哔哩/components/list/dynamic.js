@@ -1,9 +1,5 @@
-const dynamic_history = require("../API/dynamic_history");
-const dynamic_new = require("../API/dynamic_new");
-const archive_like = require("../API/archive_like");
-const coin_add = require("../API/coin_add");
-const resource_deal = require("../API/resource_deal");
-const folder_created_list_all = require("../API/folder_created_list_all");
+const API = require("../API/API");
+const api = API();
 
 var dynamic_id;
 
@@ -40,7 +36,7 @@ function getBeautiful(cards) {
                             mid: card.owner.mid, order: selected.value
                         }))
                     } else if(selected.value == 'like') {
-                        archive_like(cookie, csrf, card.aid, null, 1).then(res => {
+                        api.archive_like(cookie, csrf, card.aid, null, 1).then(res => {
                             if (res.data.code == 0) {
                                 $ui.toast("点赞成功");
                             } else {
@@ -54,7 +50,7 @@ function getBeautiful(cards) {
                             okBtn: '确定'
                         })
                         if (pd) {
-                            coin_add(cookie, csrf, card.aid, null, 1, 0).then(res => {
+                            api.coin_add(cookie, csrf, card.aid, null, 1, 0).then(res => {
                                 if (res.data.code == 0) {
                                     $ui.toast("投币成功")
                                 } else {
@@ -65,13 +61,13 @@ function getBeautiful(cards) {
                             $ui.toast("取消投币")
                         }
                     } else if (selected.value = 'deal') {
-                        let list = await folder_created_list_all(mid, cookie)
+                        let list = await api.folder_created_list_all(mid, cookie)
                         let selected = await $input.select({
                             title: '选择收藏位置',
                             options: list
                         })
                         if (selected != null) {
-                            resource_deal(cookie, csrf, card.aid, selected.id, true).then(res => {
+                            api.resource_deal(cookie, csrf, card.aid, selected.id, true).then(res => {
                                 if (res.data.code == 0) {
                                     $ui.toast("收藏成功")
                                 } else {
@@ -98,7 +94,7 @@ module.exports = {
             dynamic_id = 0
         }
         if (dynamic_id == 0) {
-            var cards = await dynamic_new(mid, cookie);
+            var cards = await api.dynamic_new(mid, cookie);
             if (cards != false) {
                 var data = getBeautiful(cards);
                 if (data.length < 20) {
@@ -111,7 +107,7 @@ module.exports = {
                 }
             }
         } else {
-            var cards = await dynamic_history(mid, dynamic_id, cookie);
+            var cards = await api.dynamic_history(mid, dynamic_id, cookie);
             if (cards != false) {
                 var data = getBeautiful(cards);
                 if (data.length < 20) {

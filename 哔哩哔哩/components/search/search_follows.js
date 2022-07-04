@@ -1,4 +1,5 @@
-const followings_search = require("../API/followings_search");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
@@ -7,7 +8,7 @@ module.exports = {
         var data = []
         page = page || 1;
         this.title = `用户搜索列表 - ${args.keyword}`
-        await followings_search(mid, page, args.keyword, cookie).then(res => {
+        await api.followings_search(mid, page, args.keyword, cookie).then(res => {
             console.log('JSON.stringify(res.data)',JSON.stringify(res.data))
             if (res.data.data == null) {
                 data.push({

@@ -1,11 +1,12 @@
-const popular = require("../API/popular");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
     title: '哔哩哔哩 - 热门',
     async fetch({page}) {
         page = page || 1;
-        var list = await popular(page, cookie);
+        var list = await api.popular(page, cookie);
         var data = list.map(m => {
             return {
                 style: 'live',

@@ -1,11 +1,12 @@
-const exp_log = require("../API/exp_log");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'article',
     title: '经验记录',
     async fetch() {
         var content = null
-        await exp_log(cookie).then(res => {
+        await api.exp_log(cookie).then(res => {
             content = `<style>
             * {
                 font-size: 13px;

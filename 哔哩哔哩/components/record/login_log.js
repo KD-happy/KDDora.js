@@ -1,11 +1,12 @@
-const login_log = require("../API/login_log");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'article',
     title: '登录记录',
     async fetch() {
         var content = null
-        await login_log(cookie).then(res => {
+        await api.login_log(cookie).then(res => {
             content = `<style>
             * {
                 font-size: 13px;

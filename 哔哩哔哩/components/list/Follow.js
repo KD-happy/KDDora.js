@@ -1,5 +1,5 @@
-const relation_followings = require("../API/relation_followings");
-const relation_tag = require("../API/relation_tag");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
@@ -7,9 +7,9 @@ module.exports = {
         page = page || 1;
         if (args.all) { // 显示全部
             if (args.attention) {
-                var list = await relation_followings(mid, page, "attention", cookie);
+                var list = await api.relation_followings(mid, page, "attention", cookie);
             } else {
-                var list = await relation_followings(mid, page, "", cookie);
+                var list = await api.relation_followings(mid, page, "", cookie);
             }
             var data = list.map(m => {
                 return {
@@ -30,7 +30,7 @@ module.exports = {
                 }
             })
         } else {
-            var list = await relation_tag(mid, args.tagid, page, cookie);
+            var list = await api.relation_tag(mid, args.tagid, page, cookie);
             var data = list.map(m => {
                 return {
                     style: 'live',

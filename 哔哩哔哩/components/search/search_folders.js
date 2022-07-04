@@ -1,4 +1,5 @@
-const resource_list = require("../API/resource_list");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
@@ -6,7 +7,7 @@ module.exports = {
         this.searchRoute = $route('list/Folder', args)
         this.title = `收藏夹搜索 - ${args.keyword}`
         page = page || 1;
-        var list = await resource_list(page, args.id, args.keyword, order, cookie);
+        var list = await api.resource_list(page, args.id, args.keyword, order, cookie);
         var data = []
         if (list && list.medias!=null) {
             list.medias.forEach(m => {

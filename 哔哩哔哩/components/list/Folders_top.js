@@ -1,4 +1,5 @@
-const folder_created_list_all = require("../API/folder_created_list_all");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'topTab',
@@ -48,7 +49,7 @@ module.exports = {
             }
         ]
         page = page || 1;
-        var list = await folder_created_list_all(mid, cookie);
+        var list = await api.folder_created_list_all(mid, cookie);
         if (list != false) {
             var data = list.map(m => {
                 return {

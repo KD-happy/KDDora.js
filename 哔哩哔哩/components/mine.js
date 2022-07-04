@@ -1,9 +1,5 @@
-const nav = require("./API/nav");
-const calendar_event = require("./API/calendar_event");
-const exp_reward = require("./API/exp_reward");
-const vip_privilege = require("./API/vip_privilege");
-const nav_stat = require("./API/nav_stat");
-const wallet_getStatus = require("./API/wallet_getStatus");
+const API = require("./API/API");
+const api = API();
 
 function formatUtcTime(v) { // 时间格式化
     if (!v) {
@@ -108,12 +104,12 @@ module.exports = {
         getCookie();
         var userlist = $storage.get("userlist");
         var [info, info1, info2, info3, info4, info5] = await $http.all([
-                nav(cookie),
-                nav_stat(cookie),
-                calendar_event(cookie),
-                exp_reward(cookie),
-                vip_privilege(cookie),
-                wallet_getStatus(cookie)
+                api.nav(cookie),
+                api.nav_stat(cookie),
+                api.calendar_event(cookie),
+                api.exp_reward(cookie),
+                api.vip_privilege(cookie),
+                api.wallet_getStatus(cookie)
             ])
         var data = [];
         data.push({title: "当前用户",style: 'category'})

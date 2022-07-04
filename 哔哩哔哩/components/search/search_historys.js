@@ -1,8 +1,5 @@
-const archive_like = require("../API/archive_like");
-const coin_add = require("../API/coin_add");
-const history_search = require("../API/history_search");
-const folder_created_list_all = require("../API/folder_created_list_all");
-const resource_deal = require("../API/resource_deal");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
@@ -12,7 +9,7 @@ module.exports = {
         var pd = false
         page = page || 1;
         this.title = `历史列表 - ${args.keyword}`
-        await history_search(page, args.keyword, cookie).then(res => {
+        await api.history_search(page, args.keyword, cookie).then(res => {
             if (res.data.code == 0) {
                 pd = res.data.data.has_more
                 res.data.data.list != null && res.data.data.list.forEach(f => {
@@ -46,7 +43,7 @@ module.exports = {
                                             mid: f.author_mid, order: selected.value
                                         }))
                                     } else if (selected.value == 'like') {
-                                        archive_like(cookie, csrf, null, f.history.bvid, 1).then(res => {
+                                        api.archive_like(cookie, csrf, null, f.history.bvid, 1).then(res => {
                                             if (res.data.code == 0) {
                                                 $ui.toast("点赞成功");
                                             } else {
@@ -60,7 +57,7 @@ module.exports = {
                                             okBtn: '确定'
                                         })
                                         if (pd) {
-                                            coin_add(cookie, csrf, null, f.history.bvid, 1, 0).then(res => {
+                                            api.coin_add(cookie, csrf, null, f.history.bvid, 1, 0).then(res => {
                                                 if (res.data.code == 0) {
                                                     $ui.toast("投币成功")
                                                 } else {
@@ -71,13 +68,13 @@ module.exports = {
                                             $ui.toast("取消投币")
                                         }
                                     } else if (selected.value == 'deal') {
-                                        let list = await folder_created_list_all(mid, cookie)
+                                        let list = await api.folder_created_list_all(mid, cookie)
                                         let selected = await $input.select({
                                             title: '选择收藏位置',
                                             options: list
                                         })
                                         if (selected != null) {
-                                            resource_deal(cookie, csrf, f.kid, selected.id, true).then(res => {
+                                            api.resource_deal(cookie, csrf, f.kid, selected.id, true).then(res => {
                                                 if (res.data.code == 0) {
                                                     $ui.toast("收藏成功")
                                                 } else {

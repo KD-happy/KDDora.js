@@ -1,7 +1,5 @@
-const info = require("../API/info");
-const arc_search = require("../API/arc_search");
-const folder_created_list_all = require("../API/folder_created_list_all");
-const resource_deal = require("../API/resource_deal");
+const API = require("../API/API");
+const api = API();
 
 var titles = {
     pubdate: '最新发布',
@@ -14,7 +12,7 @@ module.exports = {
     async fetch({page, args}) {
         console.log('JSON.stringify(args)',JSON.stringify(args))
         if (author.name == undefined) {
-            var info2 = await info(args.mid);
+            var info2 = await api.info(args.mid);
             author = {
                 name: info2.name,
                 avatar: info2.face
@@ -22,7 +20,7 @@ module.exports = {
             this.title = `${titles[args.order]}: ${author.name}`;
         }
         var data = []
-        await arc_search(args.mid, page, args.keyword, args.order, cookie).then(res => {
+        await api.arc_search(args.mid, page, args.keyword, args.order, cookie).then(res => {
             res.data.data.list.vlist.forEach(f => {
                 data.push({
                     style: 'live',

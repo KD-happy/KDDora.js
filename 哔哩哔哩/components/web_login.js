@@ -1,4 +1,5 @@
-const nav = require("./API/nav");
+const API = require("./API/API");
+const api = API();
 
 function hasId(mid) {
     var userlist = $storage.get("userlist");
@@ -30,7 +31,7 @@ module.exports = {
                     if (this.cookies.SESSDATA != null) {
                         var myCookie = "SESSDATA=" + this.cookies.SESSDATA;
                         var csrf = this.cookies.bili_jct;
-                        var user = await nav(myCookie);
+                        var user = await api.nav(myCookie);
                         if (user != false) {
                             if (hasId(user.mid)) {
                                 $ui.toast("mid重复, 添加失败");

@@ -1,10 +1,11 @@
-const popular_series_one = require("../API/popular_series_one");
+const API = require("../API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
     title: '哔哩哔哩 - 每周必看',
     async fetch({args}) {
-        var list = await popular_series_one(args.number);
+        var list = await api.popular_series_one(args.number);
         var data = list.map(m => {
             return {
                 style: 'live',
