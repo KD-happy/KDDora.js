@@ -4,23 +4,59 @@ const qs = require("qs");
 module.exports = () => {
     return {
         /**
-         * 获取当前视频 点赞、收藏、投币次数
+         * av号转bv号
+         * @param {Number} av 视频 aid
+         * @returns {String}
+         */
+        AV2BV: async (av) => {
+            a2bEncTable = ["f","Z","o","d","R","9","X","Q","D","S","U","m","2","1","y","C","k","r","6","z","B","q","i","v","e","Y","a","h","8","b","t","4","x","s","W","p","H","n","J","E","7","j","L","5","V","G","3","g","u","M","T","K","N","P","A","w","c","F"];
+            a2bEncIndex = [11, 10, 3, 8, 4, 6];
+            a2bXorEnc = 0b1010100100111011001100100100;
+            a2bAddEnc = 8728348608;
+            if (Math.floor(av) == av) {
+                tmp = "BV1@@4@1@7@@";
+                for (i = 0; i < a2bEncIndex.length; i++) {
+                tmp =
+                    tmp.substring(0, a2bEncIndex[i]) +
+                        a2bEncTable[Math.floor(
+                            ((av ^ a2bXorEnc) + a2bAddEnc) / Math.pow(a2bEncTable.length, i)
+                        ) % a2bEncTable.length] + tmp.substring(a2bEncIndex[i] + 1);
+                }
+                return tmp;
+            } else {
+                return "请输入正确的AV号！（纯数字不带AV）";
+            }
+        },
+        /**
+         * bv号转av号
+         * @param {String} bv bvid
+         * @returns {Number}
+         */
+        BV2AV: async (bv) => {
+            a2bEncTable = ["f","Z","o","d","R","9","X","Q","D","S","U","m","2","1","y","C","k","r","6","z","B","q","i","v","e","Y","a","h","8","b","t","4","x","s","W","p","H","n","J","E","7","j","L","5","V","G","3","g","u","M","T","K","N","P","A","w","c","F"];
+            a2bEncIndex = [11, 10, 3, 8, 4, 6];
+            a2bXorEnc = 0b1010100100111011001100100100;
+            a2bAddEnc = 8728348608;
+            tmp = 0;
+            for (i = 0; i < a2bEncIndex.length; i++) {
+                if (a2bEncTable.indexOf(bv[a2bEncIndex[i]]) == -1) {
+                    return "请输入正确的BV号！";
+                } else {
+                    tmp += a2bEncTable.indexOf(bv[a2bEncIndex[i]]) * Math.pow(a2bEncTable.length, i);
+                }
+            }
+            tmp = (tmp - a2bAddEnc) ^ a2bXorEnc;
+            return tmp;
+        },
+        /**
+         * 获取当前视频 点赞、收藏、投币次数的情况
          * @param {String} cookie Cookie
          * @param {Number} aid 视频 aid
          * @param {String} bvid 视频 bvid
          * @returns {Promise}
          */
         archive_relation: async (cookie, aid, bvid) => {
-            let params
-            if (aid != null) {
-                params = {
-                    aid: aid
-                }
-            } else {
-                params = {
-                    bvid: bvid
-                }
-            }
+            let params = aid != null ? {aid: aid} : {bvid: bvid}
             return axios.get('https://api.bilibili.com/x/web-interface/archive/relation', {
                 params: params,
                 headers: {
@@ -37,16 +73,7 @@ module.exports = () => {
          * @returns {Promise}
          */
         archive_stat: async (cookie, aid, bvid) => {
-            let params
-            if (aid != null) {
-                params = {
-                    aid: aid
-                }
-            } else {
-                params = {
-                    bvid: bvid
-                }
-            }
+            let params = aid != null ? {aid: aid} : {bvid: bvid}
             return axios.get('https://api.bilibili.com/x/web-interface/archive/stat', {
                 params: params,
                 headers: {
@@ -91,20 +118,7 @@ module.exports = () => {
          * @returns {Promise}
          */
         archive_like: async (cookie, csrf, aid, bvid, like) => {
-            let data
-            if (aid != null) {
-                data = {
-                    aid: aid,
-                    like: like,
-                    csrf: csrf,
-                }
-            } else {
-                data = {
-                    bvid: bvid,
-                    like: like,
-                    csrf: csrf,
-                }
-            }
+            let data = aid != null ? {aid: aid, like: like, csrf: csrf} : {bvid: bvid, like: like, csrf: csrf}
             return axios.post('https://api.bilibili.com/x/web-interface/archive/like', qs.stringify(data), {
                 headers: {
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
@@ -148,22 +162,7 @@ module.exports = () => {
          * @returns {Promise}
          */
         coin_add: async (cookie, csrf, aid, bvid, multiply, select_like=0) => {
-            let data;
-            if (aid != null) {
-                data = {
-                    aid: aid,
-                    csrf: csrf,
-                    multiply: multiply,
-                    select_like: select_like
-                }
-            } else {
-                data = {
-                    bvid: bvid,
-                    csrf: csrf,
-                    multiply: multiply,
-                    select_like: select_like
-                }
-            }
+            let data = aid != null ? {aid: aid, csrf: csrf, multiply: multiply, select_like: select_like} : {bvid: bvid, csrf: csrf, multiply: multiply, select_like: select_like}
             return axios.post('https://api.bilibili.com/x/web-interface/coin/add', qs.stringify(data), {
                 headers: {
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
@@ -425,18 +424,7 @@ module.exports = () => {
          * @returns {Promise}
          */
         history_toview_add: async (cookie, csrf, aid, bvid) => {
-            let data
-            if (aid != null) {
-                data = {
-                    aid: aid,
-                    csrf: csrf
-                }
-            } else {
-                data = {
-                    bvid: bvid,
-                    csrf: csrf
-                }
-            }
+            let data = aid != null ? {aid: aid, csrf: csrf} : {bvid: bvid, csrf: csrf}
             return axios.post('https://api.bilibili.com/x/v2/history/toview/add', qs.stringify(data), {
                 headers: {
                     'cookie': cookie,
@@ -453,18 +441,7 @@ module.exports = () => {
          * @returns {Promise}
          */
         history_toview_del: async (cookie, csrf, aid, bvid) => {
-            let data
-            if (aid != null) {
-                data = {
-                    aid: aid,
-                    csrf: csrf
-                }
-            } else {
-                data = {
-                    bvid: bvid,
-                    csrf: csrf
-                }
-            }
+            let data = aid != null ? {aid: aid, csrf: csrf} : {bvid: bvid, csrf: csrf}
             return axios.post('https://api.bilibili.com/x/v2/history/toview/del', qs.stringify(data), {
                 headers: {
                     'cookie': cookie,
@@ -548,6 +525,25 @@ module.exports = () => {
             } else {
                 return false;
             }
+        },
+        /**
+         * 获取视频信息 定位时间（观看进度）
+         * @param {String} cookie Cookie
+         * @param {Number} aid 视频 aid
+         * @param {String} bvid 视频 bvid
+         * @param {Number} cid 视频 cid，用来区分视频列表
+         * @returns 
+         */
+        player_v2: async (cookie, aid, bvid, cid) => {
+            let params = aid != null ? {aid: aid, cid: cid} : {bvid: bvid, cid: cid}
+            return axios.get('https://api.bilibili.com/x/player/v2', {
+                params: params,
+                headers: {
+                    'cookie': cookie,
+                    'referer': 'https://space.bilibili.com/',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取热门列表
@@ -877,6 +873,24 @@ module.exports = () => {
                 csrf: csrf
             }
             return axios.post('https://api.bilibili.com/x/ugcpay/web/v2/trade/elec/pay/quick', qs.stringify(data), {
+                headers: {
+                    'cookie': cookie,
+                    'referer': 'https://space.bilibili.com/',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
+         * 获取视频基本信息
+         * @param {String} cookie Cookie
+         * @param {Number} aid 视频 aid
+         * @param {String} bvid 视频 bvid
+         * @returns {Promise}
+         */
+        view: async (cookie, aid, bvid) => {
+            let params = aid != null ? {aid: aid} : {bvid: bvid}
+            return axios.get('https://api.bilibili.com/x/web-interface/view', {
+                params: params,
                 headers: {
                     'cookie': cookie,
                     'referer': 'https://space.bilibili.com/',

@@ -82,7 +82,7 @@ module.exports = {
         }
     },
     /**
-     * 点赞、投币、收藏视频
+     * 点赞、投币、收藏视频、稍后再看
      * @param {Number} aid 视频 aid
      * @param {String} bvid 视频 bvid
      * @param {Boolean} deal 是否收藏
@@ -91,36 +91,36 @@ module.exports = {
         let options = []
         options.push({value: 'like', title: '点赞'})
         options.push({value: 'add', title: '投币'})
-        if (deal) {
-            options.push({value: 'deal', title: '收藏视频'})
-        } else {
-            options.push({value: 'deal', title: '取消收藏'})
-        }
+        options.push(deal ? {value: 'deal', title: '收藏视频'} : {value: 'deal', title: '取消收藏'})
         options.push({value: 'history', title: '添加稍后再看'})
+        selected = await $input.select({
+            title: '更多操作',
+            options: options
+        })
         if (selected != null) {
             if (selected.value == 'like') {
                 api.archive_like(cookie, csrf, aid, bvid, 1).then(res => {
-                    if (res.data.code == 0) {
-                        $ui.toast("点赞成功");
-                    } else {
-                        $ui.toast(res.data.message)
-                    }
+                    $ui.toast(res.data.code == 0 ? "点赞成功" : res.data.message)
                 })
             } else if (selected.value == 'add') {
-                let pd = await $input.confirm({
-                    title: "投币",
-                    message: "是否投币",
-                    okBtn: '确定'
+                let pd = false, go = true
+                await api.archive_relation(cookie, aid, bvid).then(async res => {
+                    if (res.data.code == 0 && res.data.data.coin < 2) {
+                        pd = await $input.confirm({
+                            title: "是否投币",
+                            message: res.data.data.coin>0 ? `当前视频已投 ${res.data.data.coin} 币` : "当前视频还未投币",
+                            okBtn: '确定'
+                        })
+                    } else {
+                        go = false
+                        $ui.toast(`超过投币上限啦~`)
+                    }
                 })
                 if (pd) {
                     api.coin_add(cookie, csrf, aid, bvid, 1, 0).then(res => {
-                        if (res.data.code == 0) {
-                            $ui.toast("投币成功")
-                        } else {
-                            $ui.toast(res.data.message)
-                        }
+                        $ui.toast(res.data.code == 0 ? "投币成功" : res.data.message)
                     })
-                } else {
+                } else if (go) {
                     $ui.toast("取消投币")
                 }
             } else if (selected.value == 'deal') {
@@ -143,11 +143,7 @@ module.exports = {
                             await lad(aid, bvid, author_mid, deal_id, deal)
                         } else {
                             api.resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
-                                if (res.data.code == 0) {
-                                    $ui.toast("收藏成功")
-                                } else {
-                                    $ui.toast(res.data.message)
-                                }
+                                $ui.toast(res.data.code == 0 ? "收藏成功" : res.data.message)
                             })
                         }
                     } else {
@@ -161,11 +157,7 @@ module.exports = {
                     })
                     if (pd) {
                         api.resource_deal(cookie, csrf, aid, deal_id, deal).then(res => {
-                            if (res.data.code == 0) {
-                                $ui.toast("取消收藏成功")
-                            } else {
-                                $ui.toast(res.data.message)
-                            }
+                            $ui.toast(res.data.code == 0 ? "取消收藏成功" : res.data.message)
                         })
                     } else {
                         $ui.toast("取消 取消收藏")
@@ -182,11 +174,7 @@ module.exports = {
                 })
                 if (pd) {
                     api.history_toview_add(cookie, csrf, aid, bvid).then(res => {
-                        if (res.data.code == 0) {
-                            $ui.toast("添加成功")
-                        } else {
-                            $ui.toast(res.data.message)
-                        }
+                        $ui.toast(res.data.code == 0 ? "添加成功" : res.data.message)
                     })
                 } else {
                     $ui.toast("稍后再看 早已存在~")
@@ -195,7 +183,7 @@ module.exports = {
         }
     },
     /**
-     * 最新发布、最多播放、最多收藏、点赞、投币、收藏视频
+     * 最新发布、最多播放、最多收藏、点赞、投币、收藏视频、添加稍后再看
      * @param {Number} aid 视频 aid
      * @param {String} bvid 视频 bvid
      * @param {Number} author_mid 用户mid
@@ -210,16 +198,8 @@ module.exports = {
         options.push({value: 'stow', title: '最多收藏: stow'})
         options.push({value: 'like', title: '点赞'})
         options.push({value: 'add', title: '投币'})
-        if (deal) {
-            options.push({value: 'deal', title: '收藏视频'})
-        } else {
-            options.push({value: 'deal', title: '取消收藏'})
-        }
-        if (toview) {
-            options.push({value: 'toview', title: '添加稍后再看'})
-        } else {
-            options.push({value: 'toview', title: '删除稍后再看'})
-        }
+        options.push(deal ? {value: 'deal', title: '收藏视频'} : {value: 'deal', title: '取消收藏'})
+        options.push(toview ? {value: 'toview', title: '添加稍后再看'} : {value: 'toview', title: '删除稍后再看'})
         selected = await $input.select({
             title: '更多操作',
             options: options
@@ -231,27 +211,27 @@ module.exports = {
                 }))
             } else if(selected.value == 'like') {
                 api.archive_like(cookie, csrf, aid, bvid, 1).then(res => {
-                    if (res.data.code == 0) {
-                        $ui.toast("点赞成功");
-                    } else {
-                        $ui.toast(res.data.message)
-                    }
+                    $ui.toast(res.data.code == 0 ? "点赞成功" : res.data.message)
                 })
             } else if(selected.value == 'add') {
-                let pd = await $input.confirm({
-                    title: "投币",
-                    message: "是否投币",
-                    okBtn: '确定'
+                let pd = false, go = true
+                await api.archive_relation(cookie, aid, bvid).then(async res => {
+                    if (res.data.code == 0 && res.data.data.coin < 2) {
+                        pd = await $input.confirm({
+                            title: "是否投币",
+                            message: res.data.data.coin>0 ? `当前视频已投 ${res.data.data.coin} 币` : "当前视频还未投币",
+                            okBtn: '确定'
+                        })
+                    } else {
+                        go = false
+                        $ui.toast(`超过投币上限啦~`)
+                    }
                 })
                 if (pd) {
                     api.coin_add(cookie, csrf, aid, bvid, 1, 0).then(res => {
-                        if (res.data.code == 0) {
-                            $ui.toast("投币成功")
-                        } else {
-                            $ui.toast(res.data.message)
-                        }
+                        $ui.toast(res.data.code == 0 ? "投币成功" : res.data.message)
                     })
-                } else {
+                } else if (go) {
                     $ui.toast("取消投币")
                 }
             } else if (selected.value == 'deal') {
@@ -274,11 +254,7 @@ module.exports = {
                             await pcslad(aid, bvid, author_mid, deal_id, deal, true)
                         } else {
                             api.resource_deal(cookie, csrf, aid, selected.id, deal).then(res => {
-                                if (res.data.code == 0) {
-                                    $ui.toast("收藏成功")
-                                } else {
-                                    $ui.toast(res.data.message)
-                                }
+                                $ui.toast(res.data.code == 0 ? "收藏成功" : res.data.message)
                             })
                         }
                     } else {
@@ -292,11 +268,7 @@ module.exports = {
                     })
                     if (pd) {
                         api.resource_deal(cookie, csrf, aid, deal_id, deal).then(res => {
-                            if (res.data.code == 0) {
-                                $ui.toast("取消收藏成功")
-                            } else {
-                                $ui.toast(res.data.message)
-                            }
+                            $ui.toast(res.data.code == 0 ? "取消收藏成功" : res.data.message)
                         })
                     } else {
                         $ui.toast("取消 取消收藏")
@@ -314,22 +286,14 @@ module.exports = {
                     })
                     if (pd) {
                         api.history_toview_add(cookie, csrf, aid, bvid).then(res => {
-                            if (res.data.code == 0) {
-                                $ui.toast("添加成功")
-                            } else {
-                                $ui.toast(res.data.message)
-                            }
+                            $ui.toast(res.data.code == 0 ? "添加成功" : res.data.message)
                         })
                     } else {
                         $ui.toast("稍后再看 早已存在~")
                     }
                 } else {
                     api.history_toview_del(cookie, this.csrf, aid, bvid).then(res => {
-                        if (res.data.code == 0) {
-                            $ui.toast("删除成功")
-                        } else {
-                            $ui.toast(res.data.message)
-                        }
+                        $ui.toast(res.data.code == 0 ? "删除成功" : res.data.message)
                     })
                 }
             }
