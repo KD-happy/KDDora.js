@@ -1,6 +1,5 @@
-const getUserBriefInfo = require("./API/getUserBriefInfo");
-const getUserInfoForPortal = require("./API/getUserInfoForPortal");
-const loginUrl = require("./API/loginUrl");
+const API = require("./API/API");
+const api = API();
 
 function hasId(userAccount) {
     var userlist = $storage.get("userlist");
@@ -96,8 +95,8 @@ async function changeIP() {
     if (pd){
         for (var i=0; i<userlist.length; i++) {
             if (userlist[i].is_login) {
-                let user = await getUserBriefInfo(userlist[i].cookie);
-                let LOGIN_USER = await loginUrl(userlist[i].sson);
+                let user = await api.getUserBriefInfo(userlist[i].cookie);
+                let LOGIN_USER = await api.loginUrl(userlist[i].sson);
                 if (user != false) {
                     go = true;
                     new_userlist.push({
@@ -132,7 +131,7 @@ module.exports = {
         var data = [];
         data.push({title: "当前用户",style: 'category'})
         if (cookie != "") {
-            var info = await getUserBriefInfo(cookie);
+            var info = await api.getUserBriefInfo(cookie);
             if (info != false) {
                 data.push({
                     title: `用户名: ${info.nickname}`,
@@ -142,7 +141,7 @@ module.exports = {
                         changeIP();
                     }
                 })
-                info = await getUserInfoForPortal(cookie);
+                info = await api.getUserInfoForPortal(cookie);
                 if (info != false) {
                     var available = info.available/1024/1024; // 剩余
                     var capacity = info.capacity/1024/1024; // 总量
@@ -190,10 +189,10 @@ module.exports = {
                     if (mySSON.includes("SSON") == false) {
                         mySSON = "SSON=" + mySSON;
                     }
-                    var LOGIN_USER = await loginUrl(mySSON);
+                    var LOGIN_USER = await api.loginUrl(mySSON);
                     if (LOGIN_USER != "") {
                         var myCookie = "COOKIE_LOGIN_USER="+LOGIN_USER;
-                        var user = await getUserBriefInfo(myCookie);
+                        var user = await api.getUserBriefInfo(myCookie);
                         if (user != false) {
                             if (hasId(user.userAccount)) {
                                 var userlist = $storage.get("userlist");
@@ -251,7 +250,7 @@ module.exports = {
                     if (myCookie.includes("COOKIE_LOGIN_USER") == false) {
                         myCookie = "COOKIE_LOGIN_USER=" + myCookie;
                     }
-                    var user = await getUserBriefInfo(myCookie);
+                    var user = await api.getUserBriefInfo(myCookie);
                     if (user != false) {
                         if (hasId(user.userAccount)) {
                             $ui.toast("账户重复, 添加失败");
@@ -351,8 +350,8 @@ module.exports = {
                 })
                 if (pd) {
                     for (var i=0; i<userlist.length; i++) { // forEach 不可用
-                        let user = await getUserBriefInfo(userlist[i].cookie);
-                        let LOGIN_USER = await loginUrl(userlist[i].sson);
+                        let user = await api.getUserBriefInfo(userlist[i].cookie);
+                        let LOGIN_USER = await api.loginUrl(userlist[i].sson);
                         if (user != false) {
                             data.push({
                                 userAccount: user.userAccount,

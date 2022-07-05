@@ -1,9 +1,5 @@
-const searchFiles = require("./API/searchFiles");
-const checkBatchTask = require("./API/checkBatchTask");
-const createBatchTask = require("./API/createBatchTask");
-const createShareLink = require("./API/createShareLink");
-const getFileDownloadUrl = require("./API/getFileDownloadUrl");
-const renameFile = require("./API/renameFile");
+const API = require("./API/API");
+const api = API();
 
 async function rename_file(m) { // 重新命名文件
     var newName = await $input.text({
@@ -12,7 +8,7 @@ async function rename_file(m) { // 重新命名文件
         value: m.name
     })
     if (newName != null) {
-        var data = await renameFile(m.id, newName, cookie);
+        var data = await api.renameFile(m.id, newName, cookie);
         if (data != false) {
             $ui.toast("重新命名成功！");
         } else {
@@ -24,7 +20,7 @@ async function rename_file(m) { // 重新命名文件
 }
 
 async function file_downloa(m) { // 下载文件
-    var url = await getFileDownloadUrl(m.id, cookie);
+    var url = await api.getFileDownloadUrl(m.id, cookie);
     if (url != false) {
         $ui.browser(url.fileDownloadUrl);
         $ui.toast("开始下载...");
@@ -44,7 +40,7 @@ async function create_share_link(m) { // 创建分享文件
             options: [{title: "私密分享", value: 3}, {title: "公开分享", value: 2}]
         })
         if (selected2 != null) {
-            var res = await createShareLink(m.id, selected1.value, selected2.value, cookie);
+            var res = await api.createShareLink(m.id, selected1.value, selected2.value, cookie);
             if (res != false) {
                 var list = res.shareLinkList;
                 if (selected2.value == 3) {
@@ -71,12 +67,12 @@ async function delete_file(m) { // 删除文件
         okBtn: "删除"
     })
     if (pd) {
-        var data = await createBatchTask("DELETE", JSON.stringify([{
+        var data = await api.createBatchTask("DELETE", JSON.stringify([{
             fileId: m.id,
             fileName: m.name,
             isFolder: 0
         }]), "", "", cookie);
-        data = await checkBatchTask("DELETE", data.taskId, cookie);
+        data = await api.checkBatchTask("DELETE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("删除成功！");
         } else {
@@ -98,7 +94,7 @@ module.exports = {
         getOrderBy();
         page = page || 1;
         this.title = `搜索 “${args.keyword}” 如下:`;
-        var list = await searchFiles(parentId, args.keyword, page, orderBy, descending, cookie);
+        var list = await api.searchFiles(parentId, args.keyword, page, orderBy, descending, cookie);
         if (list != false) {
             var data = list.fileList.map(m => {
                 return {
@@ -108,10 +104,10 @@ module.exports = {
                         var video = false;
                         type.forEach(f => {m.name.includes(f) ? video=true : null});
                         if (video) {
-                            var url = await getFileDownloadUrl(m.id, cookie);
+                            var url = await api.getFileDownloadUrl(m.id, cookie);
                             $router.to($route('@video', {url: url.fileDownloadUrl, title: m.name}));
                         } else if (m.name.includes(".mp3")) {
-                            var url = await getFileDownloadUrl(m.id, cookie);
+                            var url = await api.getFileDownloadUrl(m.id, cookie);
                             $router.to($route('@audio', {url: url.fileDownloadUrl, title: m.name}));
                         } else {
                             $ui.toast("不是指定文件格式");

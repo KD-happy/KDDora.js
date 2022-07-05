@@ -1,20 +1,17 @@
-const listShareDir = require("./API/listShareDir");
-const checkAccessCode = require("./API/checkAccessCode");
-const getShareInfoByCodeV2 = require("./API/getShareInfoByCodeV2");
-const createBatchTask = require("./API/createBatchTask");
-const checkBatchTask = require("./API/checkBatchTask");
+const API = require("./API/API");
+const api = API();
 
 var shareCode, fileId, fileName, isFolder, shareId="", shareMode, accessCode;
 
 var sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function checkAccess(shareCode, accessCode) { // 需要密码的 获取shareId
-    var check = await checkAccessCode(shareCode, accessCode, cookie);
+    var check = await api.checkAccessCode(shareCode, accessCode, cookie);
     shareId = check.shareId;
 }
 
 async function getShareInfo(shareCode) { // 获取分享链接信息
-    var info =  await getShareInfoByCodeV2(shareCode, cookie);
+    var info =  await api.getShareInfoByCodeV2(shareCode, cookie);
     if (info != false) {
         fileId = info.fileId;
         isFolder = info.isFolder;
@@ -38,7 +35,7 @@ async function file_attribute(m) { // 文件属性
 }
 
 async function folder_save(m) { // 文件夹保存
-    var res = await createBatchTask("SHARE_SAVE", JSON.stringify([{
+    var res = await api.createBatchTask("SHARE_SAVE", JSON.stringify([{
         fileId: m.id,
         fileName: m.name,
         isFolder: 1
@@ -46,7 +43,7 @@ async function folder_save(m) { // 文件夹保存
     if (res != false) {
         var taskId = res.taskId;
         do {
-            res = await checkBatchTask("SHARE_SAVE", taskId, cookie);
+            res = await api.checkBatchTask("SHARE_SAVE", taskId, cookie);
             sleep(500);
         } while (res != false && res.taskStatus == 3);
         if (res != false) {
@@ -64,7 +61,7 @@ async function folder_save(m) { // 文件夹保存
 }
 
 async function file_save(m) { // 文件保存
-    var res = await createBatchTask("SHARE_SAVE", JSON.stringify([{
+    var res = await api.createBatchTask("SHARE_SAVE", JSON.stringify([{
         fileId: m.id,
         fileName: m.name,
         isFolder: 0
@@ -72,7 +69,7 @@ async function file_save(m) { // 文件保存
     if (res != false) {
         var taskId = res.taskId;
         do {
-            res = await checkBatchTask("SHARE_SAVE", taskId, cookie);
+            res = await api.checkBatchTask("SHARE_SAVE", taskId, cookie);
             sleep(500);
         } while (res != false && res.taskStatus == 3);
         if (res != false) {
@@ -128,9 +125,9 @@ module.exports = {
                             this.finish();
                             return;
                         }
-                        var list = await listShareDir(page, fileId, fileId, isFolder, shareId, shareMode, orderBy, descending, accessCode, cookie);
+                        var list = await api.listShareDir(page, fileId, fileId, isFolder, shareId, shareMode, orderBy, descending, accessCode, cookie);
                     } else {
-                        var list = await listShareDir(page, fileId, fileId, isFolder, shareId, shareMode, orderBy, descending, accessCode, cookie);
+                        var list = await api.listShareDir(page, fileId, fileId, isFolder, shareId, shareMode, orderBy, descending, accessCode, cookie);
                     }
                     if (isFolder) {
                         this.actions = [{
@@ -157,10 +154,10 @@ module.exports = {
             }
         } else {
             if (args.fileId == undefined) { // 单个文件夹
-                var list = await listShareDir(page, fileId, fileId, isFolder, shareId, shareMode, orderBy, descending, accessCode, cookie);
+                var list = await api.listShareDir(page, fileId, fileId, isFolder, shareId, shareMode, orderBy, descending, accessCode, cookie);
             } else { // 点击文件夹后
                 this.title = args.title;
-                var list = await listShareDir(page, args.fileId, args.fileId, args.isFolder, shareId, args.shareMode, orderBy, descending, args.accessCode, cookie);    
+                var list = await api.listShareDir(page, args.fileId, args.fileId, args.isFolder, shareId, args.shareMode, orderBy, descending, args.accessCode, cookie);    
             }
         }
         if (list != false) {

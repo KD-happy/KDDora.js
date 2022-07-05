@@ -1,7 +1,6 @@
 const axios = require("axios");
-
-const getUserBriefInfo = require("./API/getUserBriefInfo");
-const loginUrl = require("./API/loginUrl");
+const API = require("./API/API");
+const api = API();
 
 function hasId(userAccount) {
     var userlist = $storage.get("userlist");
@@ -32,10 +31,10 @@ module.exports = {
                 onClick: async () => {
                     if (this.cookies.SSON != null) {
                         mySSON = "SSON=" + this.cookies.SSON;
-                        var LOGIN_USER = await loginUrl(mySSON);
+                        var LOGIN_USER = await api.loginUrl(mySSON);
                         if (LOGIN_USER != "") {
                             var myCookie = "COOKIE_LOGIN_USER="+LOGIN_USER;
-                            var user = await getUserBriefInfo(myCookie);
+                            var user = await api.getUserBriefInfo(myCookie);
                             if (user != false) {
                                 if (hasId(user.userAccount)) {
                                     var userlist = $storage.get("userlist");

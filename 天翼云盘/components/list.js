@@ -1,11 +1,5 @@
-const checkBatchTask = require("./API/checkBatchTask");
-const createBatchTask = require("./API/createBatchTask");
-const createFolder = require("./API/createFolder");
-const createShareLink = require("./API/createShareLink");
-const file_listFiles = require("./API/file_listFiles");
-const getFileDownloadUrl = require("./API/getFileDownloadUrl");
-const renameFile = require("./API/renameFile");
-const renameFolder = require("./API/renameFolder");
+const API = require("./API/API");
+const api = API();
 
 // var parentId;
 
@@ -16,7 +10,7 @@ async function rename_folder(m) { // 重新命名文件
         value: m.name
     })
     if (newName != null) {
-        var data = await renameFolder(m.id, newName, cookie);
+        var data = await api.renameFolder(m.id, newName, cookie);
         if (data != false) {
             $ui.toast("重新命名成功！");
         } else {
@@ -34,7 +28,7 @@ async function rename_file(m) { // 重新命名文件
         value: m.name
     })
     if (newName != null) {
-        var data = await renameFile(m.id, newName, cookie);
+        var data = await api.renameFile(m.id, newName, cookie);
         if (data != false) {
             $ui.toast("重新命名成功！");
         } else {
@@ -56,7 +50,7 @@ async function create_share_link(m) { // 创建分享文件
             options: [{title: "私密分享", value: 3}, {title: "公开分享", value: 2}]
         })
         if (selected2 != null) {
-            var res = await createShareLink(m.id, selected1.value, selected2.value, cookie);
+            var res = await api.createShareLink(m.id, selected1.value, selected2.value, cookie);
             if (res != false) {
                 var list = res.shareLinkList;
                 if (selected2.value == 3) {
@@ -83,12 +77,12 @@ async function delete_folder(m) { // 删除文件夹
         okBtn: "删除"
     })
     if (pd) {
-        var data = await createBatchTask("DELETE", JSON.stringify([{
+        var data = await api.createBatchTask("DELETE", JSON.stringify([{
             fileId: m.id,
             fileName: m.name,
             isFolder: 1
         }]), "", "", cookie);
-        data = await checkBatchTask("DELETE", data.taskId, cookie);
+        data = await api.checkBatchTask("DELETE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("删除成功！");
         } else {
@@ -106,12 +100,12 @@ async function delete_file(m) { // 删除文件
         okBtn: "删除"
     })
     if (pd) {
-        var data = await createBatchTask("DELETE", JSON.stringify([{
+        var data = await api.createBatchTask("DELETE", JSON.stringify([{
             fileId: m.id,
             fileName: m.name,
             isFolder: 0
         }]), "", "", cookie);
-        data = await checkBatchTask("DELETE", data.taskId, cookie);
+        data = await api.checkBatchTask("DELETE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("删除成功！");
         } else {
@@ -148,8 +142,8 @@ async function copy_to(m) { // 复制到
     })
     if (pd) {
         taskInfos = "";
-        var data = await createBatchTask("COPY", JSON.stringify(taskInfos), parentId, "", cookie);
-        data = await checkBatchTask("COPY", data.taskId, cookie);
+        var data = await api.createBatchTask("COPY", JSON.stringify(taskInfos), parentId, "", cookie);
+        data = await api.checkBatchTask("COPY", data.taskId, cookie);
         if (data != false) {
             $ui.toast("复制成功！");
         } else {
@@ -168,8 +162,8 @@ async function move_to(m) { // 移动到
     })
     if (pd) {
         taskInfos = "";
-        var data = await createBatchTask("MOVE", JSON.stringify(taskInfos), parentId, "", cookie);
-        data = await checkBatchTask("MOVE", data.taskId, cookie);
+        var data = await api.createBatchTask("MOVE", JSON.stringify(taskInfos), parentId, "", cookie);
+        data = await api.checkBatchTask("MOVE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("移动成功！");
         } else {
@@ -186,7 +180,7 @@ async function create_folder(m) { // 新建文件夹
         hint: "新文件名",
         value: ""
     })
-    var res = await createFolder(parentId, folder_name, cookie);
+    var res = await api.createFolder(parentId, folder_name, cookie);
     if (res != false) {
         $ui.toast("创建成功！");
     } else {
@@ -203,7 +197,7 @@ async function folder_attribute(m) { // 文件夹属性
 }
 
 async function file_downloa(m) { // 下载文件
-    var url = await getFileDownloadUrl(m.id, cookie);
+    var url = await api.getFileDownloadUrl(m.id, cookie);
     if (url != false) {
         $ui.browser(url.fileDownloadUrl);
         $ui.toast("开始下载...");
@@ -222,7 +216,7 @@ module.exports = {
         getOrderBy();
         parentId =  args.id;
         page = page || 1;
-        var list = await file_listFiles(page, args.id, orderBy, descending, cookie);
+        var list = await api.file_listFiles(page, args.id, orderBy, descending, cookie);
         if (list != false) {
             var count = 0, file = [], dir = [];
             list.fileListAO.folderList.forEach(m => {
@@ -269,10 +263,10 @@ module.exports = {
                         var video = false;
                         type.forEach(f => {m.name.includes(f) ? video=true : null});
                         if (video) {
-                            var url = await getFileDownloadUrl(m.id, cookie);
+                            var url = await api.getFileDownloadUrl(m.id, cookie);
                             $router.to($route('@video', {url: url.fileDownloadUrl, title: m.name}));
                         } else if (m.name.includes(".mp3")) {
-                            var url = await getFileDownloadUrl(m.id, cookie);
+                            var url = await api.getFileDownloadUrl(m.id, cookie);
                             $router.to($route('@audio', {url: url.fileDownloadUrl, title: m.name}));
                         } else {
                             $ui.toast("不是指定文件格式");

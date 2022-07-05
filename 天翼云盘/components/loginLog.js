@@ -1,4 +1,5 @@
-const getLoginLog = require("./API/getLoginLog");
+const API = require("./API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
@@ -6,7 +7,7 @@ module.exports = {
     async fetch({page}) {
         getCookie();
         page = page || 1;
-        var list = await getLoginLog(page, sson);
+        var list = await api.getLoginLog(page, sson);
         if (list != false) {
             var data = list.detail.map(m => {
                 return {

@@ -1,7 +1,7 @@
 {
     "name": "TYYP",
     "displayName": "天翼云盘",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "uuid": "bc3f0312-e6f6-4134-9abc-09851d25ae3e",
     "description": "天翼云盘功能实现，支持在线观看视频。",
     "icon": "assets/logo.png",

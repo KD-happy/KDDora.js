@@ -1,6 +1,5 @@
-const checkBatchTask = require("./API/checkBatchTask");
-const createBatchTask = require("./API/createBatchTask");
-const listRecycleBinFiles = require("./API/listRecycleBinFiles");
+const API = require("./API/API");
+const api = API();
 
 var taskInfos=[];
 
@@ -13,11 +12,11 @@ async function empty_recycle() { // 清空回收站
         okBtn: "清空"
     })
     if (pd) {
-        var res = await createBatchTask("EMPTY_RECYCLE", JSON.stringify([]), "", "", cookie);
+        var res = await api.createBatchTask("EMPTY_RECYCLE", JSON.stringify([]), "", "", cookie);
         if (res != false) {
             var taskId = res.taskId;
             do {
-                res = await checkBatchTask("EMPTY_RECYCLE", taskId, cookie);
+                res = await api.checkBatchTask("EMPTY_RECYCLE", taskId, cookie);
                 sleep(500);
             } while (res != false && res.taskStatus == 1);
             if (res != false) {
@@ -44,12 +43,12 @@ async function delete_file(m) { // 删除文件
         okBtn: "删除"
     })
     if (pd) {
-        var data = await createBatchTask("CLEAR_RECYCLE", JSON.stringify([{
+        var data = await api.createBatchTask("CLEAR_RECYCLE", JSON.stringify([{
             fileId: m.id,
             fileName: m.name,
             isFolder: 0
         }]), "", "", cookie);
-        data = await checkBatchTask("CLEAR_RECYCLE", data.taskId, cookie);
+        data = await api.checkBatchTask("CLEAR_RECYCLE", data.taskId, cookie);
         if (data != false) {
             $ui.toast("删除成功！");
         } else {
@@ -61,12 +60,12 @@ async function delete_file(m) { // 删除文件
 }
 
 async function restore(m) { // 还原文件
-    var data = await createBatchTask("RESTORE", JSON.stringify([{
+    var data = await api.createBatchTask("RESTORE", JSON.stringify([{
         fileId: m.id,
         fileName: m.name,
         isFolder: 0
     }]), "", "", cookie);
-    data = await checkBatchTask("RESTORE", data.taskId, cookie);
+    data = await api.checkBatchTask("RESTORE", data.taskId, cookie);
     if (data != false) {
         $ui.toast("还原成功！");
     } else {
@@ -75,11 +74,11 @@ async function restore(m) { // 还原文件
 }
 
 async function Restore() { // 还原30文件
-    var data = await createBatchTask("RESTORE", JSON.stringify(taskInfos), "", "", cookie);
+    var data = await api.createBatchTask("RESTORE", JSON.stringify(taskInfos), "", "", cookie);
     if (data != false) {
         var taskId = data.taskId;
         do {
-            data = await checkBatchTask("RESTORE", taskId, cookie);
+            data = await api.checkBatchTask("RESTORE", taskId, cookie);
             sleep(500);
         } while (data != false && data.taskStatus == 3);
         if (data != false) {
@@ -120,7 +119,7 @@ module.exports = {
     async fetch({page}) {
         getCookie();
         page = page || 1;
-        var list = await listRecycleBinFiles(page, cookie);
+        var list = await api.listRecycleBinFiles(page, cookie);
         var data = [];
         if (list != false) {
             list.fileList.forEach(m => {

@@ -1,5 +1,5 @@
-const cancelShare = require("./API/cancelShare");
-const listShares = require("./API/listShares");
+const API = require("./API/API");
+const api = API();
 
 async function attribute(m) {
     if (m.needAccessCode != null) {
@@ -26,7 +26,7 @@ async function copySourceUrl(m) {
 }
 
 async function shareDelete(m) {
-    var res = await cancelShare(m.shareId, cookie)
+    var res = await api.cancelShare(m.shareId, cookie)
     if (res != false) {
         $ui.toast("取消成功！");
     } else {
@@ -40,7 +40,7 @@ module.exports = {
     async fetch({page}) {
         getCookie();
         page = page || 1;
-        var list = await listShares(page, cookie);
+        var list = await api.listShares(page, cookie);
         if (list != false) {
             var data = list.data.map(m => {
                 if (m.isFolder) {
