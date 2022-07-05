@@ -1,14 +1,10 @@
-const axios = require("axios");
-const share_password = require("./API/share_password");
-const share_page = require("./API/share_page");
-const share_preview = require("./API/share_preview");
-const share_delete = require("./API/share_delete");
+const API = require("./API/API");
+const api = API();
 
-// var cookie, go;
 var go;
 
 async function shareList(page) { // 分享列表
-    var list = await share_page(page, cookie);
+    var list = await api.share_page(page, cookie);
     if (list != false) {
         if (list.total <= page*18) {
             go = false;
@@ -46,7 +42,7 @@ async function sharePassword(m) { // 修改分享链接的密码
         value: m.password
     })
     if (value != null) {
-        var data = await share_password(m.key, value, cookie);
+        var data = await api.share_password(m.key, value, cookie);
         if (data) {
             $ui.toast("密码修改成功！");
         } else {
@@ -58,7 +54,7 @@ async function sharePassword(m) { // 修改分享链接的密码
 }
 
 async function deletePassword(m) { // 删除分享链接的密码
-    var data = await share_password(m.key, "", cookie);
+    var data = await api.share_password(m.key, "", cookie);
     if (data) {
         $ui.toast("密码修改成功！");
     } else {
@@ -68,14 +64,14 @@ async function deletePassword(m) { // 删除分享链接的密码
 
 async function sharePreview(m) { // 修改分享链接的预览状态
     if (m.preview) {
-        var data = await share_preview(m.key, 'false', cookie);
+        var data = await api.share_preview(m.key, 'false', cookie);
         if (data) {
             $ui.toast("禁止预览成功！");
         } else {
             $ui.toast("预览切换失败！");
         }
     } else {
-        var data = await share_preview(m.key, 'true', cookie);
+        var data = await api.share_preview(m.key, 'true', cookie);
         if (data) {
             $ui.toast("设置预览成功！");
         } else {
@@ -85,7 +81,7 @@ async function sharePreview(m) { // 修改分享链接的预览状态
 }
 
 async function shareDelete(m) {
-    var data = await share_delete(m.key, cookie);
+    var data = await api.share_delete(m.key, cookie);
     if (data) {
         $ui.toast("分享链接删除成功！");
     } else {
@@ -158,7 +154,7 @@ module.exports = {
                 return data;
             }
         } else {
-            $ui.toast("请求错误");
+            $ui.toast("请求错误 或者 列表为空");
         }
     }
 }

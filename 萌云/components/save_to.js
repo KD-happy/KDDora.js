@@ -1,6 +1,5 @@
-const directory = require("./API/directory");
-const share_save = require("./API/share_save")
-
+const API = require("./API/API");
+const api = API();
 
 module.exports = {
     type: 'list',
@@ -9,7 +8,7 @@ module.exports = {
         getCookie();
     },
     async fetch({args}) {
-        var list = await directory(args.path, cookie);
+        var list = await api.directory(args.path, cookie);
         var data = [];
         if (args.path)
         data.push({
@@ -27,6 +26,6 @@ module.exports = {
                 })
             }
         })
-        await share_save(args.key, args.path, cookie);
+        await api.share_save(args.key, args.path, cookie);
     }
 }

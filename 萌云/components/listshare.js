@@ -1,11 +1,10 @@
-const share_list = require("./API/share_list");
-const share_download = require("./API/share_download");
-const share_save = require("./API/share_save");
+const API = require("./API/API");
+const api = API();
 
 var key;
 
 async function file_down(m) { // 文件下载
-    var url = await share_download(m.key, cookie);
+    var url = await api.share_download(m.key, cookie);
     if (url != false) {
         $ui.browser(url);
         $ui.toast("开始下载...");
@@ -29,7 +28,7 @@ async function dir_info(m) {
 }
 
 async function save_to(m) {
-    if(await share_save(key, '/', cookie)) {
+    if(await api.share_save(key, '/', cookie)) {
         $ui.toast("保存成功！");
     } else {
         $ui.toast("保存失败！");
@@ -44,7 +43,7 @@ module.exports = {
     async fetch({args}) {
         this.title = args.title;
         key = args.key;
-        var list = await share_list(args.key, args.path, cookie);
+        var list = await api.share_list(args.key, args.path, cookie);
         if (list != false) {
             var dir = [];
             list.forEach(m => {

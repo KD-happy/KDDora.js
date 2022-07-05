@@ -1,12 +1,10 @@
-const axios = require("axios");
-const config = require("./API/config");
-const share_save = require("./API/share_save");
+const API = require("./API/API");
+const api = API();
 
-// var cookie;
 var items = [
     {
         title: '全部',
-        route: $route('list', {path: '', ppath: '', title: '萌云'})
+        route: $route('list', {path: '', ppath: '', title: api.title})
     },
     {
         title: '视频',
@@ -29,14 +27,14 @@ var items = [
         route: $route('shareList')
     },
     {
-        title: '萌云配置',
+        title: `${api.title}配置`,
         route: $route('login')
     }
 ];
 
 module.exports = {
     type: 'drawer',
-    title: '萌云',
+    title: api.title,
     searchRoute: $route('search'),
     actions: [
         {
@@ -55,7 +53,7 @@ module.exports = {
                     key = key.split("/");
                     key = key[key.length - 1];
                     key = key.split("?")[0];
-                    if (await share_save(key, path=="" ? "/" : path, cookie)) {
+                    if (await api.share_save(key, path=="" ? "/" : path, cookie)) {
                         $ui.toast("保存成功");
                     } else {
                         $ui.toast("保存错误");
@@ -70,7 +68,7 @@ module.exports = {
         getCookie();
     },
     async fetch() {
-        var info = await config(cookie);
+        var info = await api.config(cookie);
         var tags = info.tags.map(m => {
             return {
                 id: m.id,

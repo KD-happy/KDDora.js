@@ -1,15 +1,5 @@
-const copy = require("./API/copy");
-const directory = require("./API/directory");
-const directory_PUT = require("./API/directory_PUT");
-const download = require("./API/download");
-const object_delete = require("./API/object_delete");
-const object_patch = require("./API/object_patch");
-const preview = require("./API/preview");
-const property = require("./API/property");
-const rename = require("./API/rename");
-const share = require("./API/share");
-
-// var cookie;
+const API = require("./API/API");
+const api = API();
 
 function formatUtcTime(v) { // 时间格式化
     if (!v) {
@@ -27,10 +17,10 @@ function formatUtcTime(v) { // 时间格式化
 
 async function attribute(m) { // 属性
     if (m.type == "dir") {
-        var info = await property(m.id, true, cookie);
+        var info = await api.property(m.id, true, cookie);
         $ui.showCode(`文件夹名: ${m.name}\n文件夹大小: ${(info.size/1024/1024).toFixed(2)}M\n子文件夹: ${info.child_folder_num}\n子文件: ${info.child_file_num}\n创建时间: ${formatUtcTime(info.created_at)}\n更新时间: ${formatUtcTime(info.updated_at)}\n查询时间: ${formatUtcTime(info.query_date)}`);
     } else {
-        var info = await property(m.id, false, cookie);
+        var info = await api.property(m.id, false, cookie);
         $ui.showCode(`文件名: ${m.name}\n文件大小: ${(info.size/1024/1024).toFixed(2)}M\n创建时间: ${formatUtcTime(info.created_at)}\n更新时间: ${formatUtcTime(info.updated_at)}\n查询时间: ${formatUtcTime(info.query_date)}\n储存节点: ${info.policy}`);
     }
 }
@@ -50,9 +40,9 @@ async function make_share(m) { // 分享文件、分享文件夹
     })
     if (password != null) {
         if (m.type == "dir") {
-            var data = await share(m.id, true, password, true, 0, cookie);
+            var data = await api.share(m.id, true, password, true, 0, cookie);
         } else {
-            var data = await share(m.id, false, password, true, 0, cookie);
+            var data = await api.share(m.id, false, password, true, 0, cookie);
         }
         if (data != false) {
             $ui.toast("分享成功");
@@ -71,7 +61,7 @@ async function file_rename(m) { // 重新命名文件
         hint: "新文件名",
         value: m.name
     })
-    var data = await rename(m.id, true, new_name, cookie);
+    var data = await api.rename(m.id, true, new_name, cookie);
     if (data) {
         $ui.toast("重新命名成功！");
     } else {
@@ -86,7 +76,7 @@ async function dir_create(m) { // 创建文件夹
         hint: '文件夹名',
         value: ''
     })
-    var data = await directory_PUT(`${path}/${dir_name}`, cookie);
+    var data = await api.directory_PUT(`${path}/${dir_name}`, cookie);
     if (data) {
         $ui.toast("创建成功！");
     } else {
@@ -100,7 +90,7 @@ async function dir_rename(m) { // 重新命名文件夹
         hint: "新文件夹名",
         value: m.name
     })
-    var data = await rename(m.id, false, new_name, cookie);
+    var data = await api.rename(m.id, false, new_name, cookie);
     if (data) {
         $ui.toast("重新命名成功！");
     } else {
@@ -115,7 +105,7 @@ async function file_delete(m) { // 删除文件
         okBtn: "删除"
     })
     if (pd) {
-        var data = await object_delete(m.id, true, cookie);
+        var data = await api.object_delete(m.id, true, cookie);
         if (data) {
             $ui.toast("删除文件成功！");
         } else {
@@ -133,7 +123,7 @@ async function dir_delete(m) { // 删除文件夹
         okBtn: "删除"
     })
     if (pd) {
-        var data = await object_delete(m.id, false, cookie);
+        var data = await api.object_delete(m.id, false, cookie);
         if (data) {
             $ui.toast("删除文件夹成功！");
         } else {
@@ -145,7 +135,7 @@ async function dir_delete(m) { // 删除文件夹
 }
 
 async function file_down(m) { // 文件下载
-    var url = await download(m.id, cookie);
+    var url = await api.download(m.id, cookie);
     if (url != false) {
         $ui.browser(url);
         $ui.toast("开始下载...");
@@ -175,7 +165,7 @@ async function copy_to(m) { // 复制
         okBtn: "复制"
     })
     if (pd) {
-        if (await copy(path=="" ? "/" : path, mid, src_dir, isFile, cookie)) {
+        if (await api.copy(path=="" ? "/" : path, mid, src_dir, isFile, cookie)) {
             $ui.toast("复制成功");
         } else {
             $ui.toast("复制失败");
@@ -193,7 +183,7 @@ async function move_to(m) { // 移动到
         okBtn: "移动"
     })
     if (pd) {
-        if (await object_patch("move", path=="" ? "/" : path, mid, src_dir, isFile, cookie)) {
+        if (await api.object_patch("move", path=="" ? "/" : path, mid, src_dir, isFile, cookie)) {
             $ui.toast("移动成功");
         } else {
             $ui.toast("移动失败");
@@ -212,7 +202,7 @@ module.exports = {
     async fetch({args}) {
         this.title = args.title;
         path = args.path;
-        var list = await directory(args.path, cookie);
+        var list = await api.directory(args.path, cookie);
         if (list == false && typeof(list) == "boolean") {
             $router.to($route('login'));
             $ui.toast("Cookie已失效，请登录！");
@@ -263,7 +253,7 @@ module.exports = {
                             var video = false;
                             type.forEach(f => {m.name.includes(f) ? video=true : null});
                             if (video) {
-                                var url = await preview(m.id, cookie);
+                                var url = await api.preview(m.id, cookie);
                                 $router.to($route('@video', {url: url, title: m.name}));
                             } else {
                                 $ui.toast("不是指定文件格式");

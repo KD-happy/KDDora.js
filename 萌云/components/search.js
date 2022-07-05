@@ -1,11 +1,5 @@
-const search = require("./API/search")
-const preview = require("./API/preview");
-const property = require("./API/property");
-const share = require("./API/share");
-const rename = require("./API/rename");
-const download = require("./API/download");
-
-// var cookie;
+const API = require("./API/API");
+const api = API();
 
 function formatUtcTime(v) { // 时间格式化
     if (!v) {
@@ -22,7 +16,7 @@ function formatUtcTime(v) { // 时间格式化
 }
 
 async function attribute(m) { // 属性
-    var info = await property(m.id, false, cookie);
+    var info = await api.property(m.id, false, cookie);
     $ui.showCode(`文件名: ${m.name}\n文件大小: ${(info.size/1024/1024).toFixed(2)}M\n创建时间: ${formatUtcTime(info.created_at)}\n更新时间: ${formatUtcTime(info.updated_at)}\n查询时间: ${formatUtcTime(info.query_date)}\n储存节点: ${info.policy}`);
 }
 
@@ -40,7 +34,7 @@ async function make_share(m) { // 分享文件、分享文件夹
         value: new_pwd
     })
     if (password != null) {
-        var data = await share(m.id, false, password, true, 0, cookie);
+        var data = await api.share(m.id, false, password, true, 0, cookie);
         $ui.toast("分享成功");
         $ui.showCode(`链接: ${data}\n密码: ${password}`);
     } else {
@@ -54,7 +48,7 @@ async function file_rename(m) { // 重新命名文件
         hint: "新文件名",
         value: m.name
     })
-    var data = await rename(m.id, true, new_name, cookie);
+    var data = await api.rename(m.id, true, new_name, cookie);
     if (data) {
         $ui.toast("重新命名成功！");
     } else {
@@ -63,7 +57,7 @@ async function file_rename(m) { // 重新命名文件
 }
 
 async function file_down(m) { // 文件下载
-    var url = await download(m.id, cookie);
+    var url = await api.download(m.id, cookie);
     if (url != false) {
         $ui.browser(url);
         $ui.toast("开始下载...");
@@ -88,7 +82,7 @@ module.exports = {
         getCookie();
     },
     async fetch({args}) {
-        var list = await search(args.keyword, cookie);
+        var list = await api.search(args.keyword, cookie);
         this.title = `搜索 “${args.keyword}” 如下:`;
         var data = [];
         if (list != false) {
@@ -100,7 +94,7 @@ module.exports = {
                         var video = false;
                         type.forEach(f => {m.name.includes(f) ? video=true : null});
                         if (video) {
-                            var url = await preview(m.id, cookie);
+                            var url = await api.preview(m.id, cookie);
                             $router.to($route('@video', {url: url, title: m.name}));
                         } else {
                             $ui.toast("不是视频");

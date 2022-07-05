@@ -1,10 +1,5 @@
-const config = require("./API/config");
-const policies = require("./API/policies");
-const policy = require("./API/policy");
-const session = require("./API/session");
-const storage = require("./API/storage");
-const tag_delete = require("./API/tag_delete");
-const tag_filter = require("./API/tag_filter");
+const API = require("./API/API");
+const api = API();
 
 var userlist;
 
@@ -23,7 +18,7 @@ async function login() {
         value: ''
     })
     if (Password != null) {
-        var cookie = await session(userName, Password);
+        var cookie = await api.session(userName, Password);
         if (cookie == false) {return false;}
         // return cookie.replace("cloudreve-session=", "").replace(";", "");
         return cookie.replace(";", "");
@@ -130,12 +125,12 @@ async function sorting(m) { // 切换排序
 
 module.exports = {
     type: 'list',
-    title: '萌云登录',
+    title: `${api.title}登录`,
     async fetch() {
         getCookie();
         userlist = $storage.get("userlist");
-        var info = await config(cookie);
-        var po = await policies(cookie);
+        var info = await api.config(cookie);
+        var po = await api.policies(cookie);
         if (po != false) {
             var po_current = po.current;
             var po_options = po.options;
@@ -154,7 +149,7 @@ module.exports = {
             title: `用户名：${info.nickname}`,
             summary: `邮箱: ${info.user_name}`
         });
-        var use = await storage(cookie);
+        var use = await api.storage(cookie);
         if (use != false) {
             var used = (Number(use.data.used)/1024/1024).toFixed(2);
             var free = (Number(use.data.free)/1024/1024).toFixed(2);
@@ -183,7 +178,7 @@ module.exports = {
                 if (cloudreve_session == false) {
                     $ui.toast("登录失败");
                 } else {
-                    var user = await config(cloudreve_session);
+                    var user = await api.config(cloudreve_session);
                     if (hasId(user.id)) {
                         $ui.toast("id重复, 添加失败");
                     } else {
@@ -214,7 +209,7 @@ module.exports = {
                     if (moCookie.includes("cloudreve-session") == false) {
                         moCookie = "cloudreve-session=" + moCookie;
                     }
-                    var user = await config(moCookie);
+                    var user = await api.config(moCookie);
                     if (user.nickname != "") {
                         if (hasId(user.id)) {
                             $ui.toast("id重复, 添加失败");
@@ -261,7 +256,7 @@ module.exports = {
                     value: ""
                 })
                 if (expression != null) {
-                    if(await tag_filter(name, expression, cookie)) {
+                    if(await api.tag_filter(name, expression, cookie)) {
                         $ui.toast("创建成功");
                     } else {
                         $ui.toast("创建失败");
@@ -288,7 +283,7 @@ module.exports = {
                     options: options
                 })
                 if (selected != null) {
-                    if (await tag_delete(selected.id, cookie)) {
+                    if (await api.tag_delete(selected.id, cookie)) {
                         $ui.toast(`${selected.title} 删除成功`);
                     } else {
                         $ui.toast(`${selected.title} 删除失败`);
@@ -332,7 +327,7 @@ module.exports = {
                 })
                 if (pd) {
                     for (var i=0; i<userlist.length; i++) { // forEach 不可用
-                        let user = await config(userlist[i].cookie);
+                        let user = await api.config(userlist[i].cookie);
                         if (user.nickname != "") {
                             data.push({
                                 id: user.id,
@@ -370,7 +365,7 @@ module.exports = {
                 if (selected == null) {
                     $ui.toast("取消切换");
                 } else {
-                    if(await policy(selected.id, cookie)) {
+                    if(await api.policy(selected.id, cookie)) {
                         $ui.toast("切换成功");
                     } else {
                         $ui.toast("切换失败");

@@ -1,13 +1,10 @@
-const axios = require("axios");
-const share_download = require("./API/share_download");
-const share_info = require("./API/share_info");
-const share_search = require("./API/share_search");
-const share_save = require("./API/share_save");
+const API = require("./API/API");
+const api = API();
 
 var keywork, go;
 
 async function file_down(m) { // 文件下载
-    var url = await share_download(m.key, cookie);
+    var url = await api.share_download(m.key, cookie);
     if (url != false) {
         $ui.browser(url);
         $ui.toast("开始下载...");
@@ -17,7 +14,7 @@ async function file_down(m) { // 文件下载
 }
 
 async function file_info(m) {
-    var data = await share_info(m.key, cookie);
+    var data = await api.share_info(m.key, cookie);
     if (data == false) {
         $ui.toast("获取失败！");
     } else {
@@ -26,7 +23,7 @@ async function file_info(m) {
 }
 
 async function dir_info(m) {
-    var data = await share_info(m.key, cookie);
+    var data = await api.share_info(m.key, cookie);
     if (data == false) {
         $ui.toast("获取失败！");
     } else {
@@ -41,7 +38,7 @@ async function copySourceUrl(m) { // 复制分享链接和密码
 }
 
 async function save_to(m) {
-    if(await share_save(m.key, path=="" ? "/" : path, cookie)) {
+    if(await api.share_save(m.key, path=="" ? "/" : path, cookie)) {
         $ui.toast("保存成功！");
     } else {
         $ui.toast("保存失败！");
@@ -62,7 +59,7 @@ module.exports = {
     async fetch({page}) {
         page = page || 1;
         keywork == null ? this.finish() : null;
-        var list = await share_search(keywork, page, cookie);
+        var list = await api.share_search(keywork, page, cookie);
         if (list != false) {
             if (list.length < 18) {
                 go = false;
