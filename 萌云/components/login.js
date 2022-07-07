@@ -129,11 +129,14 @@ module.exports = {
     async fetch() {
         getCookie();
         userlist = $storage.get("userlist");
-        var info = await api.config(cookie);
-        var po = await api.policies(cookie);
+        var [info, po, use] = await $axios.all([
+                api.config(cookie),
+                api.policies(cookie),
+                api.storage(cookie)
+            ])
         if (po != false) {
-            var po_current = po.current;
-            var po_options = po.options;
+            var po_current = po.current != undefined ? po.current : po[0];
+            var po_options = po.options != undefined ? po.options : po;
         } else {
             var po_current = {id: "获取失败"};
             var po_options = [];
@@ -149,7 +152,6 @@ module.exports = {
             title: `用户名：${info.nickname}`,
             summary: `邮箱: ${info.user_name}`
         });
-        var use = await api.storage(cookie);
         if (use != false) {
             var used = (Number(use.data.used)/1024/1024).toFixed(2);
             var free = (Number(use.data.free)/1024/1024).toFixed(2);
