@@ -185,6 +185,25 @@ module.exports = () => {
             return res.data.res_code != null ? res.data : false;
         },
         /**
+         * 抽奖
+         * @param {String} cookie Cookie
+         * @param {String} taskId 抽奖类型 TASK_SIGNIN TASK_SIGNIN_PHOTOS
+         * @returns {Promise}
+         */
+        drawPrizeMarketDetails: async (cookie, taskId) => {
+            return axios.get('https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action', {
+                params: {
+                    taskId: taskId,
+                    activityId: 'ACT_SIGNIN'
+                },
+                headers: {
+                    cookie: cookie,
+                    host: 'm.cloud.189.cn',
+                    'user-agent': 'Mozilla/5.0 (Linux; Android 5.1.1; SM-G930K Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile Safari/537.36 Ecloud/8.6.3 Android/22 clientId/355325117317828 clientModel/SM-G930K imsi/460071114317824 clientChannelId/qq proVersion/1.0.6'
+                }
+            })
+        },
+        /**
          * 获取文件id中文件和文件夹相关信息
          * @param {Number} pageNum 请求页数
          * @param {String} folderId 文件Id
@@ -641,6 +660,26 @@ module.exports = () => {
                 return false;
             }
             return res.data.res_code != null ? res.data : false;
+        },
+        /**
+         * 签到
+         * @param {String} cookie Cookie
+         * @returns {Promise}
+         */
+        userSign: async (cookie) => {
+            return axios.get('https://api.cloud.189.cn/mkt/userSign.action', {
+                params: {
+                    rand: new Date().getTime(),
+                    clientType: 'TELEANDROID',
+                    version: '8.6.3',
+                    model: 'SM-G930K'
+                },
+                headers: {
+                    cookie: cookie,
+                    host: 'm.cloud.189.cn',
+                    'user-agent': 'Mozilla/5.0 (Linux; Android 5.1.1; SM-G930K Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile Safari/537.36 Ecloud/8.6.3 Android/22 clientId/355325117317828 clientModel/SM-G930K imsi/460071114317824 clientChannelId/qq proVersion/1.0.6'
+                }
+            })
         }
     }
 }

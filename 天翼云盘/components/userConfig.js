@@ -137,8 +137,9 @@ module.exports = {
                     title: `用户名: ${info.nickname}`,
                     summary: `用户账号: ${info.userAccount}`,
                     thumb: info.icon,
-                    onClick: () => {
-                        changeIP();
+                    onClick: async () => {
+                        await changeIP();
+                        this.refresh();
                     }
                 })
                 info = await api.getUserInfoForPortal(cookie);
@@ -173,7 +174,7 @@ module.exports = {
         data.push({title: "登录操作",style: 'category'})
         data.push({
             title: "登录",
-            spanCount: 4,
+            spanCount: 2,
             route: $route("web_login")
         })
         data.push({ // 添加SSON
@@ -273,6 +274,25 @@ module.exports = {
                 } else {
                     $ui.toast("取消添加");
                 }
+            }
+        })
+        data.push({ // 添加签到
+            title: '签到',
+            spanCount: 2,
+            onClick: async () => {
+                let res1, res2, res3
+                await api.userSign(cookie).then(res => {
+                    res1 = res.data.netdiskBonus
+                })
+                await api.drawPrizeMarketDetails(cookie, "TASK_SIGNIN").then(res => {
+                    console.log(res.data)
+                    res2 = res.data
+                })
+                await api.drawPrizeMarketDetails(cookie, "TASK_SIGNIN_PHOTOS").then(res => {
+                    console.log(res.data)
+                    res3 = res.data
+                })
+                $ui.toast(`签到获取 ${res1} M\n${res2.prizeName != null ? res2.prizeName : "抽奖机会已用完"}\n${res3.prizeName != null ? res3.prizeName : "抽奖机会已用完"}`)
             }
         })
         data.push({title: "其他操作",style: 'category'})
