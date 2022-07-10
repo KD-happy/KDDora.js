@@ -114,13 +114,14 @@ module.exports = {
     async fetch() {
         getCookie();
         var userlist = $storage.get("userlist");
-        var [info, info1, info2, info3, info4, info5] = await $axios.all([
+        var [info, info1, info2, info3, info4, info5, info6] = await $axios.all([
                 api.nav(cookie),
                 api.nav_stat(cookie),
                 api.calendar_event(cookie),
                 api.exp_reward(cookie),
                 api.vip_privilege(cookie),
-                api.wallet_getStatus(cookie)
+                api.wallet_getStatus(cookie),
+                api.dynamic_region(cookie, 1, 6, 1)
             ])
         var data = [];
         data.push({title: "当前用户",style: 'category'})
@@ -141,7 +142,7 @@ module.exports = {
             data.push({
                 style: 'article',
                 title: '兑换详细信息',
-                summary: `B币券: ${info4[0].state == 1 ? `已领取 - 剩余 ${info.wallet.coupon_balance}` : "未领取"}  优惠券: ${info4[1].state == 1 ? "已领取" : "未领取"}\nB币券: ${formatUtcTimes(info4[0].period_end_unix*1000)}  优惠券: ${formatUtcTimes(info4[1].period_end_unix*1000)}`
+                summary: `B币券: ${info4[0].state == 1 ? `已领取 - 剩余 ${info.wallet.coupon_balance}` : "未领取"}  优惠券: ${info4[1].state == 1 ? "已领取" : "未领取"}\n距下一轮兑换截止时间戳\nB币券: ${formatUtcTimes(info4[0].period_end_unix*1000)}  优惠券: ${formatUtcTimes(info4[1].period_end_unix*1000)}`
             })
         } else {
             data.push({style: 'simple',thumb: "",title: "用户名: 游客", summary: "用户mid: 0"});
@@ -208,6 +209,66 @@ module.exports = {
                     $ui.toast("添加成功");
                 } else {
                     $ui.toast("取消添加");
+                }
+            }
+        })
+        data.push({title: "任务操作", style: "category"})
+        data.push({
+            title: "签到",
+            spanCount: 2,
+            onClick: async () => {
+                await api.live_sign(cookie).then(res => {
+                    console.log("直播签到")
+                    console.log(res.data)
+                    $ui.toast(res.data.code == 0 ? res.data.data.text : res.data.message)
+                })
+                await api.manga_ClockIn(cookie).then(res => {
+                    console.log("漫画签到")
+                    console.log(res.data)
+                }).catch(err => {
+                    console.log(err.toJSON())
+                })
+            }
+        })
+        data.push({
+            title: "观看视频",
+            spanCount: 3,
+            onClick: async () => {
+                let aid = info6.data.data.archives[0].aid
+                let cid = info6.data.data.archives[0].cid
+                let title = info6.data.data.archives[0].title
+                console.log(title, aid, cid)
+                api.history_report(cookie, csrf, aid, cid).then(res => {
+                    console.log(res.data)
+                    $ui.toast(res.data.code == 0 ? "观看视频成功" : res.data.message)
+                })
+            }
+        })
+        data.push({
+            title: "分享视频",
+            spanCount: 3,
+            onClick: async () => {
+                let aid = info6.data.data.archives[0].aid
+                let cid = info6.data.data.archives[0].cid
+                let title = info6.data.data.archives[0].title
+                console.log(title, aid, cid)
+                api.share_add(cookie, csrf, aid).then(res => {
+                    console.log(res.data)
+                    $ui.toast(res.data.code == 0 ? "分享视频成功" : res.data.message)
+                })
+            }
+        })
+        data.push({
+            title: "银币to硬币",
+            spanCount: 4,
+            onClick: async () => {
+                if (info5.silver_2_coin_left > 0) {
+                    await api.wallet_silver2coin(cookie, csrf).then(res => {
+                        console.log(res.data)
+                        $ui.toast(res.data.code == 0 ? "兑换成功" : res.data.message)
+                    })
+                } else {
+                    $ui.toast("今日已兑换")
                 }
             }
         })
