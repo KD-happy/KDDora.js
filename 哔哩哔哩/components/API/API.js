@@ -92,16 +92,15 @@ module.exports = () => {
          * @returns {Promise}
          */
         arc_search: async (mid, pn, keyword, order, cookie) => {
-            var params = {
-                mid: mid,
-                ps: 30,
-                tid: 0,
-                pn: pn,
-                keyword: keyword,
-                order: order,
-            }
             return axios.get('https://api.bilibili.com/x/space/arc/search', {
-                params: params,
+                params: {
+                    mid: mid,
+                    ps: 30,
+                    tid: 0,
+                    pn: pn,
+                    keyword: keyword,
+                    order: order,
+                },
                 headers: {
                     'cookie': cookie,
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
@@ -129,26 +128,15 @@ module.exports = () => {
         /**
          * 日历 - 加入时间
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         calendar_event: async (cookie) => {
-            var url = "https://member.bilibili.com/x2/creative/h5/calendar/event?ts=0";
-            try {
-                var res = await axios.get(url, {
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.data.pfs == null) {
-                return false;
-            } else {
-                return res.data.data.pfs;
-            }
+            return axios.get('https://member.bilibili.com/x2/creative/h5/calendar/event?ts=0', {
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 视频点赞
@@ -187,66 +175,42 @@ module.exports = () => {
          * @param {Number} mid 用户mid
          * @param {Number} dynamic_id 动态id
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         dynamic_history: async (mid, dynamic_id, cookie) => {
-            var url = 'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_history';
-            var params = {
-                'uid': mid,
-                'offset_dynamic_id': dynamic_id,
-                'type': 8,
-                'from': '',
-                'platform': 'web'
-            }
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data.cards;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_history', {
+                params: {
+                    'uid': mid,
+                    'offset_dynamic_id': dynamic_id,
+                    'type': 8,
+                    'from': '',
+                    'platform': 'web'
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 动态信息 -- 第一次请求
          * @param {Number} mid 用户mid
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         dynamic_new: async (mid, cookie) => {
-            var url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new";
-            var params = {
-                'uid': mid,
-                'type_list': 8,
-                'from': '',
-                'platform': 'web'
-            }
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data.cards;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new', {
+                params: {
+                    'uid': mid,
+                    'type_list': 8,
+                    'from': '',
+                    'platform': 'web'
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 分区最新视频
@@ -285,66 +249,39 @@ module.exports = () => {
         /**
          * 获取经验任务
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         exp_reward: async (cookie) => {
-            var url = "https://api.bilibili.com/x/member/web/exp/reward";
-            try {
-                var res = await axios.get(url, {
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.bilibili.com/x/member/web/exp/reward', {
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取全部收藏夹信息 标签
          * @param {Number} mid 用户mid
          * @param {String} cookie 请求Cookie
          * @param {Number} rid aid 查看视频在收藏夹中的位置
-         * @returns {Object}
+         * @returns {Promise}
          */
         folder_created_list_all: async (mid, cookie, rid=0) => {
-            var url = "https://api.bilibili.com/x/v3/fav/folder/created/list-all";
-            var params;
-            if (rid != 0) {
-                params = {
+            let params = rid != 0 ? {
                     up_mid: mid,
                     jsonp: 'jsonp',
                     rid: rid
-                }
-            } else {
-                params = {
+                } : {
                     up_mid: mid,
                     jsonp: 'jsonp'
                 }
-            }
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.data == null) {
-                return false;
-            } else {
-                return res.data.data.list;
-            }
+            return axios.get('https://api.bilibili.com/x/v3/fav/folder/created/list-all', {
+                params: params,
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 关注列表搜索
@@ -355,17 +292,15 @@ module.exports = () => {
          * @returns {Promise}
          */
         followings_search: async (vmid, pn, name, cookie) => {
-            var url = 'https://api.bilibili.com/x/relation/followings/search'
-            var params = {
-                vmid: vmid,
-                pn: pn,
-                ps: 20,
-                order: 'desc',
-                order_type: 'attention',
-                name: name,
-            }
-            return axios.get(url, {
-                params: params,
+            return axios.get('https://api.bilibili.com/x/relation/followings/search', {
+                params: {
+                    vmid: vmid,
+                    pn: pn,
+                    ps: 20,
+                    order: 'desc',
+                    order_type: 'attention',
+                    name: name,
+                },
                 headers: {
                     'cookie': cookie,
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
@@ -376,27 +311,16 @@ module.exports = () => {
          * 获取历史列表
          * @param {Object} params 请求参数
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         history_cursor: async (params, cookie) => {
-            var url = 'https://api.bilibili.com/x/web-interface/history/cursor';
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.bilibili.com/x/web-interface/history/cursor', {
+                params: params,
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 上传视频进度
@@ -428,13 +352,12 @@ module.exports = () => {
          * @returns {Promise}
          */
         history_search: async (pn, keyword, cookie) => {
-            var params = {
-                pn: pn,
-                keyword: keyword,
-                business: 'all',
-            }
             return axios.get('https://api.bilibili.com/x/web-goblin/history/search', {
-                params: params,
+                params: {
+                    pn: pn,
+                    keyword: keyword,
+                    business: 'all'
+                },
                 headers: {
                     'cookie': cookie,
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
@@ -491,16 +414,18 @@ module.exports = () => {
         /**
          * 获取用户信息
          * @param {Number} mid 用户mid
-         * @returns {Object}
+         * @returns {Promise}
          */
         info: async (mid) => {
-            var url = `https://api.bilibili.com/x/space/acc/info?mid=${mid}&jsonp=jsonp`;
-            var res = await axios.get(url, {
+            return axios.get('https://api.bilibili.com/x/space/acc/info', {
+                params: {
+                    mid: mid,
+                    jsonp: 'jsonp'
+                },
                 headers: {
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
                 }
             })
-            return res.data.data;
         },
         /**
          * 直播签到
@@ -531,7 +456,7 @@ module.exports = () => {
         /**
          * 漫画签到
          * @param {String} cookie Cookie
-         * @returns {Promise} 
+         * @returns {Promise}
          */
         manga_ClockIn: async (cookie) => {
             let data = {
@@ -547,50 +472,28 @@ module.exports = () => {
         /**
          * 获取关注人数、粉丝数
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         nav_stat: async (cookie) => {
-            var url = "https://api.bilibili.com/x/web-interface/nav/stat";
-            try {
-                var res = await axios.get(url, {
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.bilibili.com/x/web-interface/nav/stat', {
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 导航个人信息
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         nav: async (cookie) => {
-            var url = "https://api.bilibili.com/x/web-interface/nav";
-            try {
-                var res = await axios.get(url, {
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.bilibili.com/x/web-interface/nav', {
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取视频信息 定位时间（观看进度）
@@ -598,7 +501,7 @@ module.exports = () => {
          * @param {Number} aid 视频 aid
          * @param {String} bvid 视频 bvid
          * @param {Number} cid 视频 cid，用来区分视频列表
-         * @returns 
+         * @returns {Promise}
          */
         player_v2: async (cookie, aid, bvid, cid) => {
             let params = aid != null ? {aid: aid, cid: cid} : {bvid: bvid, cid: cid}
@@ -613,38 +516,47 @@ module.exports = () => {
         },
         /**
          * 获取热门列表
-         * @returns {Object}
+         * @returns {Promise}
          */
         popular_series_list: async () => {
-            var url = 'https://api.bilibili.com/x/web-interface/popular/series/list';
-            var res = await axios.get(url);
-            return res.data.data.list;
+            return axios.get('https://api.bilibili.com/x/web-interface/popular/series/list', {
+                headers: {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取指定一期
          * @param {Number} number 哪一期
-         * @returns 
+         * @returns {Promise}
          */
         popular_series_one: async (number) => {
-            var url = `https://api.bilibili.com/x/web-interface/popular/series/one?number=${number}`;
-            var res = await axios.get(url);
-            return res.data.data.list;
+            return axios.get('https://api.bilibili.com/x/web-interface/popular/series/one', {
+                params: {
+                    number: number
+                },
+                headers: {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取热门
          * @param {Number} page 页数
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         popular: async (page, cookie) => {
-            var url = `https://api.bilibili.com/x/web-interface/popular?ps=20&pn=${page}`;
-            var res = await axios.get(url, {
+            return axios.get('https://api.bilibili.com/x/web-interface/popular', {
+                params: {
+                    ps: 20,
+                    pn: page
+                },
                 headers: {
                     "cookie": cookie,
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
                 }
-            });
-            return res.data.data.list;
+            })
         },
         /**
          * 兑换优惠券
@@ -670,56 +582,41 @@ module.exports = () => {
          * @param {Number} rid 排行类型视频
          * @param {String} type 类型
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         ranking: async (rid, type, cookie) => {
-            var url = "https://api.bilibili.com/x/web-interface/ranking/v2";
-            var params = {
-                'rid': rid,
-                'type': type
-            }
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data.list;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.bilibili.com/x/web-interface/ranking/v2', {
+                params: {
+                    'rid': rid,
+                    'type': type
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取关注大标签中的信息
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         relation_followings: async (mid, page, attention, cookie) => {
-            var url = "https://api.bilibili.com/x/relation/followings";
-            var params = {
-                vmid: mid,
-                pn: page,
-                ps: '20',
-                order: 'desc',
-                order_type: attention, // 排序 ''最新关注, 'attention'最常访问
-                jsonp: 'jsonp'
-            }
-            var res = await axios.get(url, {
-                params: params,
+            return axios.get('https://api.bilibili.com/x/relation/followings', {
+                params: {
+                    vmid: mid,
+                    pn: page,
+                    ps: '20',
+                    order: 'desc',
+                    order_type: attention, // 排序 ''最新关注, 'attention'最常访问
+                    jsonp: 'jsonp'
+                },
                 headers: {
                     'cookie': cookie,
                     'referer': 'https://space.bilibili.com/',
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
                 }
             })
-            return res.data.data.list;
         },
         /**
          * 获取关注小标签中的信息
@@ -727,64 +624,40 @@ module.exports = () => {
          * @param {Number} tagid 标签id
          * @param {Number} page 页数
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         relation_tag: async (mid, tagid, page, cookie) => {
-            var url = "https://api.bilibili.com/x/relation/tag";
-            var params = {
-                mid: mid,
-                tagid: tagid,
-                pn: page,
-                ps: 20,
-                jsonp: 'jsonp'
-            }
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'cookie': cookie,
-                        'referer': 'https://space.bilibili.com/',
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.bilibili.com/x/relation/tag', {
+                params: {
+                    mid: mid,
+                    tagid: tagid,
+                    pn: page,
+                    ps: 20,
+                    jsonp: 'jsonp'
+                },
+                headers: {
+                    'cookie': cookie,
+                    'referer': 'https://space.bilibili.com/',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取关注标签
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         relation_tags: async (cookie) => {
-            var url = "https://api.bilibili.com/x/relation/tags";
-            var params = {
-                jsonp: 'jsonp'
-            }
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'cookie': cookie,
-                        'referer': 'https://space.bilibili.com/',
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data;
-            } else {
-                return false;
-            }
+            return await axios.get('https://api.bilibili.com/x/relation/tags', {
+                params: {
+                    jsonp: 'jsonp'
+                },
+                headers: {
+                    'cookie': cookie,
+                    'referer': 'https://space.bilibili.com/',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 收藏夹 添加/删除
@@ -832,33 +705,26 @@ module.exports = () => {
          * @param {String} keyword 搜索关键字
          * @param {String} order 收藏排序
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         resource_list: async (page, id, keyword, order, cookie) => {
-            var url = 'https://api.bilibili.com/x/v3/fav/resource/list';
-            var params = {
-                media_id: id,
-                pn: page,
-                ps: 20,
-                keyword: keyword,
-                order: order, // mtime: 最近收藏, view: 最多播放, pubtime: 最新投稿
-                type: 0,
-                tid: 0,
-                platform: 'web',
-                jsonp: 'jsonp'
-            }
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
+            return axios.get('https://api.bilibili.com/x/v3/fav/resource/list', {
+                params: {
+                    media_id: id,
+                    pn: page,
+                    ps: 20,
+                    keyword: keyword,
+                    order: order, // mtime: 最近收藏, view: 最多播放, pubtime: 最新投稿
+                    type: 0,
+                    tid: 0,
+                    platform: 'web',
+                    jsonp: 'jsonp'
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
             return res.data.data;
         },
         /**
@@ -885,32 +751,24 @@ module.exports = () => {
          * @param {Number} mid 用户mid
          * @param {String} order 排序
          * @param {Number} page 页数
-         * @returns {Object}
+         * @returns {Promise}
          */
         space_arc_search: async (mid, order, page) => {
-            var url = 'https://api.bilibili.com/x/space/arc/search';
-            var params = {
-                mid: mid,
-                ps: 30,
-                tid: 0, // 0全部 3音乐 129舞蹈 160生活 217动物圈
-                pn: page,
-                keyword: '',
-                order: order, // pubdate: 最新发布, click: 最多播放, stow: 最多收藏
-                jsonp: 'jsonp'
-            }
-            try {
-                var res = await axios.get(url, {
-                    params: params,
-                    headers: {
-                        'referer': 'https://space.bilibili.com/',
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                });
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            return res.data.data.list.vlist;
+            return axios.get('https://api.bilibili.com/x/space/arc/search', {
+                params: {
+                    mid: mid,
+                    ps: 30,
+                    tid: 0, // 0全部 3音乐 129舞蹈 160生活 217动物圈
+                    pn: page,
+                    keyword: '',
+                    order: order, // pubdate: 最新发布, click: 最多播放, stow: 最多收藏
+                    jsonp: 'jsonp'
+                },
+                headers: {
+                    'referer': 'https://space.bilibili.com/',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 首页换一换
@@ -918,22 +776,20 @@ module.exports = () => {
          * @param {Number} version 版本 未知 1
          * @param {Number} ps 一页显示数量 8
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         top_rcmd: async (fresh_type, version, ps, cookie) => {
-            var url = `https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3&version=1&ps=8`;
-            try {
-                var res = await axios.get(url, {
-                    headers: {
-                        'cookie': cookie,
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            return res.data.data.item;
+            return await axios.get('https://api.bilibili.com/x/web-interface/index/top/rcmd', {
+                params: {
+                    fresh_type: fresh_type,
+                    version: version,
+                    ps: ps,
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * B币充电
@@ -984,61 +840,45 @@ module.exports = () => {
         /**
          * 获取 优惠券 和 B币券
          * @param {String} cookie Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         vip_privilege: async (cookie) => {
-            var url = "https://api.bilibili.com/x/vip/privilege/my";
-            try {
-                var res = await axios.get(url, {
-                    headers: {
-                        'cookie': cookie,
-                        'referer': 'https://space.bilibili.com/',
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
-                    }
-                })
-            } catch {
-                console.log("请求错误！");
-                return false;
-            }
-            if (res.data.code == 0) {
-                return res.data.data.list;
-            } else {
-                return false;
-            }
+            return axios.get('https://api.bilibili.com/x/vip/privilege/my', {
+                headers: {
+                    'cookie': cookie,
+                    'referer': 'https://space.bilibili.com/',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 获取直播间信息
          * @param {Number} size 获取多少直播间
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         w_live_users: async (size, cookie) => {
-            var url =  `https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/w_live_users?size=${size}`;
-            var res = await axios.get(url, {
+            return axios.get('https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/w_live_users', {
+                params: {
+                    size: size
+                },
                 headers: {
                     'cookie': cookie,
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
                 }
             })
-            return res.data.data;
         },
         /**
          * 获取钱包中的信息
          * @param {String} cookie 请求Cookie
-         * @returns {Object}
+         * @returns {Promise}
          */
         wallet_getStatus: async (cookie) => {
-            var url = "https://api.live.bilibili.com/xlive/revenue/v1/wallet/getStatus"
-            return await axios.get(url, {
+            return axios.get('https://api.live.bilibili.com/xlive/revenue/v1/wallet/getStatus', {
                 headers: {
                     'cookie': cookie,
                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
                 }
-            }).then(res => {
-                return res.data.data
-            }).catch(err => {
-                console.log("请求错误！")
-                return false
             })
         },
         /**

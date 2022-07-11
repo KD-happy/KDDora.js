@@ -7,7 +7,9 @@ module.exports = {
         this.searchRoute = $route('list/Folder', args)
         this.title = `收藏夹搜索 - ${args.keyword}`
         page = page || 1;
-        var list = await api.resource_list(page, args.id, args.keyword, order, cookie);
+        var list = await api.resource_list(page, args.id, args.keyword, order, cookie).then(res => {
+            return res.data.code == 0 ? res.data.data : false;
+        })
         var data = []
         if (list && list.medias!=null) {
             list.medias.forEach(m => {

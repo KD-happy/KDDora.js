@@ -18,7 +18,9 @@ module.exports = {
                 'business': ''
             }
         }
-        var history = await api.history_cursor(params, cookie);
+        var history = await api.history_cursor(params, cookie).then(res => {
+            return res.data.code == 0 ? res.data.data : false;
+        })
         if (history != false) {
             params = history.cursor;
             var data = [];

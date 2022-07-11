@@ -6,7 +6,9 @@ module.exports = {
     async fetch({args, page}) {
         this.searchRoute = $route('search/search_folders', args)
         page = page || 1;
-        var list = await api.resource_list(page, args.id, "", order, cookie);
+        var list = await api.resource_list(page, args.id, "", order, cookie).then(res => {
+            return res.data.code == 0 ? res.data.data : false;
+        })
         var data = []
         if (list && list.medias!=null) {
             list.medias.forEach(m => {

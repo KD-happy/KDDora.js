@@ -49,7 +49,9 @@ module.exports = {
             }
         ]
         page = page || 1;
-        var list = await api.folder_created_list_all(mid, cookie);
+        var list = await api.folder_created_list_all(mid, cookie).then(res => {
+            return res.data.data == null ? false : res.data.data.list;
+        })
         if (list != false) {
             var data = list.map(m => {
                 return {

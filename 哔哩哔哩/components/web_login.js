@@ -32,6 +32,7 @@ module.exports = {
                         var myCookie = "SESSDATA=" + this.cookies.SESSDATA;
                         var csrf = this.cookies.bili_jct;
                         var user = await api.nav(myCookie);
+                        user = user.data.code == 0 ? user.data.data : false;
                         if (user != false) {
                             if (hasId(user.mid)) {
                                 $ui.toast("mid重复, 添加失败");

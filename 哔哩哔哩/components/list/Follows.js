@@ -6,7 +6,9 @@ module.exports = {
     style: 'list',
     searchRoute: $route('search/search_follows'),
     async fetch() {
-        var tags = await api.relation_tags(cookie);
+        var tags = await api.relation_tags(cookie).then(res => {
+            return res.data.code == 0 ? res.data.data : false;
+        })
         if (tags != false) {
             var data = [{
                 title: '全部显示',

@@ -6,7 +6,9 @@ module.exports = {
     title: '哔哩哔哩 - 热门',
     async fetch({page}) {
         page = page || 1;
-        var list = await api.popular(page, cookie);
+        var list = await api.popular(page, cookie).then(res => {
+            return res.data.data.list;
+        })
         var data = list.map(m => {
             return {
                 style: 'live',

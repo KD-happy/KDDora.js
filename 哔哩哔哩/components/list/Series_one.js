@@ -5,7 +5,9 @@ module.exports = {
     type: 'list',
     title: '哔哩哔哩 - 每周必看',
     async fetch({args}) {
-        var list = await api.popular_series_one(args.number);
+        var list = await api.popular_series_one(args.number).then(res => {
+            return res.data.data.list;
+        })
         var data = list.map(m => {
             return {
                 style: 'live',

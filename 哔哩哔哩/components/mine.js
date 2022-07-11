@@ -123,6 +123,12 @@ module.exports = {
                 api.wallet_getStatus(cookie),
                 api.dynamic_region(cookie, 1, 6, 1)
             ])
+        info = info.data.code == 0 ? info.data.data : false;
+        info1 = info1.data.code == 0 ? info1.data.data : false;
+        info2 = info2.data.data.pfs != null ? info2.data.data.pfs : false;
+        info3 = info3.data.code == 0 ? info3.data.data : false;
+        info4 = info4.data.code == 0 ? info4.data.data.list : false;
+        info5 = info5.data.code == 0 ? info5.data.data : false;
         var data = [];
         data.push({title: "当前用户",style: 'category'})
         if (info != false) {
@@ -313,7 +319,7 @@ module.exports = {
                 if (up_mid != null) {
                     let up_name = ""
                     await api.info(up_mid).then(res => {
-                        up_name = res != undefined ? res.name : "啥都木有"
+                        up_name = res.data.data != undefined ? res.data.data.name : "啥都木有"
                     })
                     let bp_num = await $input.number({
                         title: "要充电的B币 - 默认全部B币券",

@@ -5,7 +5,9 @@ module.exports = {
     type: 'list',
     async fetch({args}) {
         rid = args.rid;
-        var list = await api.ranking(args.rid, args.type, cookie);
+        var list = await api.ranking(args.rid, args.type, cookie).then(res => {
+            return res.data.code == 0 ? res.data.data.list : false;
+        })
         var data = list.map(m => {
             return {
                 style: 'live',

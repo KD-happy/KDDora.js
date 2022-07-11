@@ -13,14 +13,18 @@ module.exports = {
         page = page || 1;
         this.searchRoute = $route('search/search_videos', args)
         if (author.name == undefined) {
-            var info2 = await api.info(args.mid);
+            var info = await api.info(args.mid).then(res => {
+                return res.data.data;
+            })
             author = {
-                name: info2.name,
-                avatar: info2.face
+                name: info.name,
+                avatar: info.face
             }
             this.title = `${titles[args.order]}: ${author.name}`;
         }
-        var list = await api.space_arc_search(args.mid, args.order, page);
+        var list = await api.space_arc_search(args.mid, args.order, page).then(res => {
+            return res.data.data.list.vlist;
+        })
         var data = list.map(m => {
             return {
                 style: 'live',

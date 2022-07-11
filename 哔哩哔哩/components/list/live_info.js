@@ -20,7 +20,9 @@ module.exports = {
         }
     ],
     async fetch() {
-        var list = await api.w_live_users(0, cookie);
+        var list = await api.w_live_users(0, cookie).then(res => {
+            return res.data.data;
+        })
         if (list.count > 0) {
             list = await api.w_live_users(list.count, cookie);
             var data = list.items.map(m => {

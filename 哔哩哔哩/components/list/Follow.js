@@ -7,9 +7,13 @@ module.exports = {
         page = page || 1;
         if (args.all) { // 显示全部
             if (args.attention) {
-                var list = await api.relation_followings(mid, page, "attention", cookie);
+                var list = await api.relation_followings(mid, page, "attention", cookie).then(res => {
+                    return res.data.data.list;
+                })
             } else {
-                var list = await api.relation_followings(mid, page, "", cookie);
+                var list = await api.relation_followings(mid, page, "", cookie).then(res => {
+                    return res.data.data.list;
+                })
             }
             var data = list.map(m => {
                 return {
@@ -30,7 +34,9 @@ module.exports = {
                 }
             })
         } else {
-            var list = await api.relation_tag(mid, args.tagid, page, cookie);
+            var list = await api.relation_tag(mid, args.tagid, page, cookie).then(res => {
+                return res.data.code == 0 ? res.data.data : false;
+            })
             var data = list.map(m => {
                 return {
                     style: 'live',

@@ -36,6 +36,7 @@ module.exports = {
         }
         if (dynamic_id == 0) {
             var cards = await api.dynamic_new(mid, cookie);
+            cards = cards.data.code == 0 ? cards.data.data.cards : false;
             if (cards != false) {
                 var data = getBeautiful(cards);
                 if (data.length < 20) {
@@ -48,7 +49,9 @@ module.exports = {
                 }
             }
         } else {
-            var cards = await api.dynamic_history(mid, dynamic_id, cookie);
+            var cards = await api.dynamic_history(mid, dynamic_id, cookie).then(res => {
+                return res.data.code == 0 ? res.data.data.cards : false;
+            })
             if (cards != false) {
                 var data = getBeautiful(cards);
                 if (data.length < 20) {

@@ -125,7 +125,9 @@ module.exports = {
                 }
             } else if (selected.value == 'deal') {
                 if (deal) {
-                    let list = await api.folder_created_list_all(mid, cookie, aid)
+                    let list = await api.folder_created_list_all(mid, cookie, aid).then(res => {
+                        return res.data.data == null ? false : res.data.data.list;
+                    })
                     let selected = await $input.select({
                         title: '选择收藏位置（*添加了的）',
                         options: list.map(m => {
@@ -236,7 +238,9 @@ module.exports = {
                 }
             } else if (selected.value == 'deal') {
                 if (deal) {
-                    let list = await api.folder_created_list_all(mid, cookie, aid)
+                    let list = await api.folder_created_list_all(mid, cookie, aid).then(res => {
+                        return res.data.data == null ? false : res.data.data.list;
+                    })
                     let selected = await $input.select({
                         title: '选择收藏位置（*添加了的）',
                         options: list.map(m => {
