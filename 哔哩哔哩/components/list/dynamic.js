@@ -35,8 +35,9 @@ module.exports = {
             dynamic_id = 0
         }
         if (dynamic_id == 0) {
-            var cards = await api.dynamic_new(mid, cookie);
-            cards = cards.data.code == 0 ? cards.data.data.cards : false;
+            var cards = await api.dynamic_new(mid, cookie).then(res => {
+                return res.data.code == 0 ? res.data.data.cards : false;
+            })
             if (cards != false) {
                 var data = getBeautiful(cards);
                 if (data.length < 20) {

@@ -89,6 +89,7 @@ module.exports = {
      */
     async lad(aid, bvid, deal) {
         let options = []
+        options.push({value: 'player', title: '播放'})
         options.push({value: 'like', title: '点赞'})
         options.push({value: 'add', title: '投币'})
         options.push(deal ? {value: 'deal', title: '收藏视频'} : {value: 'deal', title: '取消收藏'})
@@ -98,7 +99,9 @@ module.exports = {
             options: options
         })
         if (selected != null) {
-            if (selected.value == 'like') {
+            if (selected.value == 'player') {
+                $router.to($route('play', {aid: aid, bvid: bvid}))
+            } else if (selected.value == 'like') {
                 api.archive_like(cookie, csrf, aid, bvid, 1).then(res => {
                     $ui.toast(res.data.code == 0 ? "点赞成功" : res.data.message)
                 })
@@ -198,6 +201,7 @@ module.exports = {
         options.push({value: 'pubdate', title: '最新发布: pubdate'})
         options.push({value: 'click', title: '最多播放: click'})
         options.push({value: 'stow', title: '最多收藏: stow'})
+        options.push({value: 'player', title: '播放'})
         options.push({value: 'like', title: '点赞'})
         options.push({value: 'add', title: '投币'})
         options.push(deal ? {value: 'deal', title: '收藏视频'} : {value: 'deal', title: '取消收藏'})
@@ -207,7 +211,9 @@ module.exports = {
             options: options
         })
         if (selected != null) {
-            if (selected.value == 'pubdate' || selected.value == 'click' || selected.value == 'stow') {
+            if (selected.value == 'player') {
+                $router.to($route('play', {aid: aid, bvid: bvid}))
+            } else if (selected.value == 'pubdate' || selected.value == 'click' || selected.value == 'stow') {
                 $router.to($route('list/space_video', {
                     mid: author_mid, order: selected.value
                 }))

@@ -496,6 +496,37 @@ module.exports = () => {
             })
         },
         /**
+         * 获取播放视频链接
+         * @param {Number} aid 视频 aid
+         * @param {String} bvid 视频 bvid
+         * @param {Number} cid 视频 cid
+         * @param {Number} qn 清晰度
+         * @param {String} type 视频类型
+         * @param {String} platform 来源
+         * @returns {Promise}
+         */
+        player_playurl: async (aid, bvid, cid, qn, type, platform) => {
+            let params = aid != null ? {
+                    avid: aid,
+                    cid: cid,
+                    qn: qn,
+                    type: type,
+                    platform: platform
+                } : {
+                    bvid: bvid,
+                    cid: cid,
+                    qn: qn,
+                    type: type,
+                    platform: platform
+                }
+            return axios.get("https://api.bilibili.com/x/player/playurl", {
+                params: params,
+                headers: {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
          * 获取视频信息 定位时间（观看进度）
          * @param {String} cookie Cookie
          * @param {Number} aid 视频 aid

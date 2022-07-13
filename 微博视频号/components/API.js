@@ -100,7 +100,7 @@ module.exports = (cookie) => {
         /**
          * 通过UID获取用户信息
          * @param {String} uid 用户UID
-         * @returns {Pomise}
+         * @returns {Promise}
          */
         getInfoByUID: async (uid) => {
             let url = 'https://weibo.com/ajax/profile/info'
@@ -114,7 +114,7 @@ module.exports = (cookie) => {
         /**
          * 通过UID获取用户IP归属地
          * @param {String} uid 用户UID
-         * @returns {Pomise}
+         * @returns {Promise}
          */
         getIPByUID: async (uid) => {
             let url = 'https://weibo.com/ajax/profile/detail'

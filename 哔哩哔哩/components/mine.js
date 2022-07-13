@@ -223,17 +223,21 @@ module.exports = {
             title: "签到",
             spanCount: 2,
             onClick: async () => {
+                let toast = ""
                 await api.live_sign(cookie).then(res => {
                     console.log("直播签到")
                     console.log(res.data)
-                    $ui.toast(res.data.code == 0 ? res.data.data.text : res.data.message)
+                    toast = res.data.code == 0 ? res.data.data.text : res.data.message
                 })
                 await api.manga_ClockIn(cookie).then(res => {
                     console.log("漫画签到")
                     console.log(res.data)
+                    toast += '\n签到成功'
                 }).catch(err => {
                     console.log(err.toJSON())
+                    toast += '\n今日已签 or cookie已失效'
                 })
+                $ui.toast(toast)
             }
         })
         data.push({
