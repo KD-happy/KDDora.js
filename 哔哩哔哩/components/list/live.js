@@ -1,5 +1,6 @@
 const axios = require("axios");
 const qs = require("qs");
+const Danmu = require("./danmu");
 
 var rid, order = 1, quality = 4;
 var durl;
@@ -98,6 +99,24 @@ module.exports = {
         let info = await get_room_id(rid);
         if (info.code) {
             rid = info.rid;
+
+            this.startDanmaku = () => { // 开始弹幕
+                if (this.danmu == null) {
+                    this.danmu = new Danmu(rid)
+                    this.danmu.connect()
+                    this.danmu.on('DANMU_MSG', (res) => {
+                        this.addDanmaku({
+                            color: res.color,
+                            content: res.content,
+                            author: {
+                                name: res.user.name
+                            }
+                        })
+                        console.log(`${res.user.name}: ${res.content}`)
+                    })
+                }
+            }
+
             var playUrlList = await playUrl(rid, quality, order); // 原画
             durl = playUrlList.durl.map(list => {
                 return list.url;

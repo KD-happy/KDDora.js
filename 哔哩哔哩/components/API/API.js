@@ -260,6 +260,26 @@ module.exports = () => {
             })
         },
         /**
+         * 获取指定UP主动态
+         * @param {String} cookie Cookie
+         * @param {String} offset 动态id
+         * @param {Number} mid UP主mid
+         * @returns {Promise}
+         */
+        feed_space: async (cookie, offset, mid) => {
+            return axios.get('https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space', {
+                params: {
+                    offset: offset,
+                    host_mid: mid,
+                    timezone_offset: -480,
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
          * 获取全部收藏夹信息 标签
          * @param {Number} mid 用户mid
          * @param {String} cookie 请求Cookie
@@ -757,6 +777,73 @@ module.exports = () => {
                 }
             })
             return res.data.data;
+        },
+        /**
+         * 获取指定 集合id 项目
+         * @param {String} cookie Cookie
+         * @param {Number} mid UP主mid
+         * @param {Number} series_id 集合id
+         * @param {Nubmer} pn 请求页
+         * @returns {Promise}
+         */
+        series_archives: async (cookie, mid, series_id, pn) => {
+            return axios.get('https://api.bilibili.com/x/series/archives', {
+                params: {
+                    mid: mid,
+                    series_id: series_id,
+                    only_normal: true,
+                    sort: 'desc', // desc：默认排序、asc：升序排序
+                    pn: pn,
+                    ps: 30,
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
+         * 获取指定 列表id 项目
+         * @param {String} cookie Cookie
+         * @param {Number} mid UP主mid
+         * @param {Number} season_id 列表id
+         * @param {Nubmer} page_num 请求页
+         * @returns {Promise}
+         */
+        seasons_archives_list: async (cookie, mid, season_id, page_num) => {
+            return axios.get('https://api.bilibili.com/x/polymer/space/seasons_archives_list', {
+                params: {
+                    mid: mid,
+                    season_id: season_id,
+                    sort_reverse: false, // false：默认排序、true：升序排序
+                    page_num: page_num,
+                    page_size: 30
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
+         * 获取 合集和列表 的每个项目
+         * @param {String} cookie Cookie
+         * @param {Number} mid UP主mid
+         * @param {Number} page_num 请求页数
+         * @returns {Promise}
+         */
+        seasons_series_list: async (cookie, mid, page_num) => {
+            return axios.get('https://api.bilibili.com/x/polymer/space/seasons_series_list', {
+                params: {
+                    mid: mid,
+                    page_num: page_num,
+                    page_size: 20
+                },
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
         },
         /**
          * 视频分享

@@ -24,7 +24,9 @@ module.exports = {
             return res.data.data;
         })
         if (list.count > 0) {
-            list = await api.w_live_users(list.count, cookie);
+            list = await api.w_live_users(list.count, cookie).then(res => {
+                return res.data.data;
+            });
             var data = list.items.map(m => {
                 return {
                     style: 'live',
