@@ -83,6 +83,23 @@ module.exports = () => {
             })
         },
         /**
+         * 获取视频TAG
+         * @param {String} cookie Cookie
+         * @param {Number} aid 视频aid
+         * @param {String} bvid 视频bvid
+         * @returns {Promise}
+         */
+        archive_tags: async (cookie, aid, bvid) => {
+            let params = aid != null ? {aid: aid} : {bvid: bvid}
+            return axios.get('https://api.bilibili.com/x/tag/archive/tags', {
+                params: params,
+                headers: {
+                    'cookie': cookie,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
+                }
+            })
+        },
+        /**
          * 搜索视频
          * @param {String} mid 用户Mid
          * @param {Number} pn 页数

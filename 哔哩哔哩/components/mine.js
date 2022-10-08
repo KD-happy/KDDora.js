@@ -1,6 +1,8 @@
 const API = require("./API/API");
 const api = API();
 
+var that;
+
 function formatUtcTime(v) { // 时间格式化
     if (!v) {
         return ''
@@ -46,10 +48,11 @@ function changLogin(mid) {
         if (f.mid == mid) {
             f.is_login = true;
         } else {
-            f.is_login = false
+            f.is_login = false;
         }
     })
     $storage.put("userlist", userlist);
+    that.refresh();
 }
 
 async function deleteLogin(m) { // 删除用户
@@ -67,6 +70,8 @@ async function deleteLogin(m) { // 删除用户
             }
         })
         $storage.put("userlist", new_userlist);
+        $ui.toast("删除成功");
+        that.refresh();
     } else {
         $ui.toast("取消删除");
     }
@@ -103,6 +108,7 @@ async function sorting(m) { // 切换排序
         new_userlist.splice(selected.value, 0, sort);
         $storage.put("userlist", new_userlist);
         $ui.toast("切换成功");
+        that.refresh();
     } else {
         $ui.toast("取消切换");
     }
@@ -112,6 +118,7 @@ module.exports = {
     type: 'list',
     title: '哔哩哔哩 - 个人信息和配置',
     async fetch() {
+        that = this;
         getCookie();
         var userlist = $storage.get("userlist");
         var [info, info1, info2, info3, info4, info5, info6] = await $axios.all([
@@ -173,7 +180,8 @@ module.exports = {
                     if (myCookie.includes("SESSDATA") == false) {
                         myCookie = "SESSDATA=" + myCookie;
                     }
-                    var user = await nav(myCookie);
+                    var user = await api.nav(myCookie);
+                    user = user.data.code == 0 ? user.data.data : false;
                     if (user != false) {
                         if (hasId(user.mid)) {
                             $ui.toast("mid重复, 添加失败");
@@ -187,6 +195,7 @@ module.exports = {
                             })
                             $storage.put("userlist", userlist);
                             $ui.toast("登录成功, 添加列表成功");
+                            this.refresh();
                         }
                     } else {
                         $ui.toast("添加失败, Cookie失效");
@@ -213,6 +222,7 @@ module.exports = {
                     })
                     $storage.put("userlist", userlist);
                     $ui.toast("添加成功");
+                    this.refresh();
                 } else {
                     $ui.toast("取消添加");
                 }
@@ -238,6 +248,7 @@ module.exports = {
                     toast += '\n今日已签 or cookie已失效'
                 })
                 $ui.toast(toast)
+                this.refresh()
             }
         })
         data.push({
@@ -251,6 +262,7 @@ module.exports = {
                 api.history_report(cookie, csrf, aid, cid).then(res => {
                     console.log(res.data)
                     $ui.toast(res.data.code == 0 ? "观看视频成功" : res.data.message)
+                    this.refresh()
                 })
             }
         })
@@ -265,6 +277,7 @@ module.exports = {
                 api.share_add(cookie, csrf, aid).then(res => {
                     console.log(res.data)
                     $ui.toast(res.data.code == 0 ? "分享视频成功" : res.data.message)
+                    this.refresh()
                 })
             }
         })
@@ -276,6 +289,7 @@ module.exports = {
                     await api.wallet_silver2coin(cookie, csrf).then(res => {
                         console.log(res.data)
                         $ui.toast(res.data.code == 0 ? "兑换成功" : res.data.message)
+                        this.refresh();
                     })
                 } else {
                     $ui.toast("今日已兑换")
@@ -292,6 +306,7 @@ module.exports = {
                 api.privilege_receive(cookie, csrf, 1).then(res => {
                     if (res.data.code == 0) {
                         $ui.toast("兑换成功")
+                        this.refresh()
                     } else {
                         $ui.toast(res.data.message)
                     }
@@ -305,6 +320,7 @@ module.exports = {
                 api.privilege_receive(cookie, csrf, 2).then(res => {
                     if (res.data.code == 0) {
                         $ui.toast("兑换成功")
+                        this.refresh()
                     } else {
                         $ui.toast(res.data.message)
                     }
@@ -394,6 +410,7 @@ module.exports = {
                     }
                     $storage.put("userlist", data);
                     $ui.toast("清除成功");
+                    this.refresh()
                 } else {
                     $ui.toast("取消清除");
                 }
