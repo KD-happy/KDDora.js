@@ -296,76 +296,78 @@ module.exports = {
                 }
             }
         })
-        if (info4[0].state == 0 || info4[1].state == 0 || info.wallet.coupon_balance > 0) {
-            data.push({title: "会员鼓励兑换",style: 'category'})
-        }
-        info4[0].state == 0 && data.push({
-            title: 'B币兑换',
-            spanCount: 4,
-            onClick: () => {
-                api.privilege_receive(cookie, csrf, 1).then(res => {
-                    if (res.data.code == 0) {
-                        $ui.toast("兑换成功")
-                        this.refresh()
-                    } else {
-                        $ui.toast(res.data.message)
-                    }
-                })
+        if (info != false) {
+            if (info4[0].state == 0 || info4[1].state == 0 || info.wallet.coupon_balance > 0) {
+                data.push({title: "会员鼓励兑换",style: 'category'})
             }
-        })
-        info4[1].state == 0 && data.push({
-            title: '优惠券兑换',
-            spanCount: 4,
-            onClick: () => {
-                api.privilege_receive(cookie, csrf, 2).then(res => {
-                    if (res.data.code == 0) {
-                        $ui.toast("兑换成功")
-                        this.refresh()
-                    } else {
-                        $ui.toast(res.data.message)
-                    }
-                })
-            }
-        })
-        info.wallet.coupon_balance > 0 && data.push({
-            title: '充电',
-            spanCount: 4,
-            onClick: async () => {
-                let up_mid = await $input.number({
-                    title: "充电（默认是自己的mid）",
-                    hint: "请输入充电UP主的mid",
-                    value: mid
-                })
-                if (up_mid != null) {
-                    let up_name = ""
-                    await api.info(up_mid).then(res => {
-                        up_name = res.data.data != undefined ? res.data.data.name : "啥都木有"
+            info4[0].state == 0 && data.push({
+                title: 'B币兑换',
+                spanCount: 4,
+                onClick: () => {
+                    api.privilege_receive(cookie, csrf, 1).then(res => {
+                        if (res.data.code == 0) {
+                            $ui.toast("兑换成功")
+                            this.refresh()
+                        } else {
+                            $ui.toast(res.data.message)
+                        }
                     })
-                    let bp_num = await $input.number({
-                        title: "要充电的B币 - 默认全部B币券",
-                        hint:  `将为TA ${up_name} 充电`,
-                        value: info.wallet.coupon_balance
+                }
+            })
+            info4 && info4[1].state == 0 && data.push({
+                title: '优惠券兑换',
+                spanCount: 4,
+                onClick: () => {
+                    api.privilege_receive(cookie, csrf, 2).then(res => {
+                        if (res.data.code == 0) {
+                            $ui.toast("兑换成功")
+                            this.refresh()
+                        } else {
+                            $ui.toast(res.data.message)
+                        }
                     })
-                    if (bp_num != null) {
-                        api.trade_elec_pay_quick(cookie, csrf, bp_num, true, up_mid, 'up', up_mid).then(res => {
-                            if (res.data.code == 0) {
-                                if (res.data.data.status > 0) {
-                                    $ui.toast("充电成功")
-                                } else {
-                                    $ui.toast(res.data.data.msg)
-                                }
-                            } else {
-                                $ui.toast(res.data.message)
-                            }
+                }
+            })
+            info.wallet.coupon_balance > 0 && data.push({
+                title: '充电',
+                spanCount: 4,
+                onClick: async () => {
+                    let up_mid = await $input.number({
+                        title: "充电（默认是自己的mid）",
+                        hint: "请输入充电UP主的mid",
+                        value: mid
+                    })
+                    if (up_mid != null) {
+                        let up_name = ""
+                        await api.info(up_mid).then(res => {
+                            up_name = res.data.data != undefined ? res.data.data.name : "啥都木有"
                         })
+                        let bp_num = await $input.number({
+                            title: "要充电的B币 - 默认全部B币券",
+                            hint:  `将为TA ${up_name} 充电`,
+                            value: info.wallet.coupon_balance
+                        })
+                        if (bp_num != null) {
+                            api.trade_elec_pay_quick(cookie, csrf, bp_num, true, up_mid, 'up', up_mid).then(res => {
+                                if (res.data.code == 0) {
+                                    if (res.data.data.status > 0) {
+                                        $ui.toast("充电成功")
+                                    } else {
+                                        $ui.toast(res.data.data.msg)
+                                    }
+                                } else {
+                                    $ui.toast(res.data.message)
+                                }
+                            })
+                        } else {
+                            $ui.toast("取消充电")
+                        }
                     } else {
                         $ui.toast("取消充电")
                     }
-                } else {
-                    $ui.toast("取消充电")
                 }
-            }
-        })
+            })
+        }
         data.push({title: "用户列表操作",style: 'category'})
         data.push({
             title: "删除所有用户",
@@ -397,7 +399,8 @@ module.exports = {
                 })
                 if (pd) {
                     for (var i=0; i<userlist.length; i++) { // forEach 不可用
-                        let user = await nav(userlist[i].cookie);
+                        let user = await api.nav(userlist[i].cookie);
+                        user = user.data.code == 0 ? user.data.data : false;
                         if (user != false) {
                             data.push({
                                 mid: user.mid,
